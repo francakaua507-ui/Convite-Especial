@@ -207,6 +207,11 @@
             margin-bottom: 10px;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
+
+        .music-box {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -237,6 +242,12 @@
             <button class="btn-confirmar" onclick="finalizar()">Sim! ❤️</button>
         </div>
     </div>
+
+    <!-- Elemento de Áudio Oculto -->
+    <audio id="background-music" loop>
+        <source src="URL_DA_MUSICA_AQUI.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio.
+    </audio>
 
     <script>
         function fuger(btn) {
@@ -286,8 +297,21 @@
                     <div class="easter-egg-18">
                         🎁 <i>E como é meu aniversário de 18 anos, ter você aceitando esse convite já valeu como o melhor presente! 😂🎂</i>
                     </div>
+
+                    <div class="music-box">
+                        <button onclick="tocarMusica()" style="background: #ff758c; color: white; padding: 8px 16px; font-size: 0.85rem; border-radius: 20px; border: none; cursor: pointer; margin-top: 10px;">🎵 Tocar Trilha Sonora</button>
+                    </div>
                 </div>
             `;
+        }
+
+        function tocarMusica() {
+            const music = document.getElementById('background-music');
+            music.play().then(() => {
+                alert("Música a tocar! Bom proveito! 🎶");
+            }).catch(error => {
+                console.log("Erro ao reproduzir áudio:", error);
+            });
         }
     </script>
 </body>
