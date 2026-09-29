@@ -124,17 +124,17 @@
 
     <script>
         function iniciarExperiencia() {
-            // Esconde a tela inicial
+            // Esconde a tela inicial suavemente
             const welcomeScreen = document.getElementById('welcome-screen');
             welcomeScreen.style.opacity = '0';
             setTimeout(() => {
                 welcomeScreen.classList.add('hidden');
             }, 500);
 
-            // Mostra o conteúdo principal
+            // Mostra o conteúdo principal do convite
             document.getElementById('main-content').style.display = 'block';
 
-            // Toca a música liberada pelo clique
+            // Dispara a música após o clique do usuário
             const music = document.getElementById('background-music');
             music.play().catch(error => {
                 console.log("Erro ao reproduzir áudio:", error);
