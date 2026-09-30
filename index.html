@@ -25,7 +25,7 @@
             position: relative;
         }
 
-        /* --- CORAÇÕES NO FUNDO --- */
+        /* --- ELEMENTOS FLUTUANTES NO FUNDO (Corações e Frases) --- */
         .heart-bg {
             position: absolute;
             font-size: 1.6rem;
@@ -34,6 +34,26 @@
             animation: flutuar 7s linear infinite;
             bottom: -50px;
             opacity: 0.7;
+            z-index: 1;
+        }
+
+        .frase-flutuante {
+            position: absolute;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            user-select: none;
+            pointer-events: none;
+            animation: flutuarFrase 9s linear infinite;
+            bottom: -50px;
+            opacity: 0;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            max-width: 250px;
+            text-align: center;
         }
 
         @keyframes flutuar {
@@ -50,12 +70,22 @@
             }
         }
 
-        .heart-bg:nth-child(1) { left: 10%; animation-duration: 6s; animation-delay: 0s; }
-        .heart-bg:nth-child(2) { left: 25%; animation-duration: 8s; animation-delay: 2s; }
-        .heart-bg:nth-child(3) { left: 40%; animation-duration: 5s; animation-delay: 1s; }
-        .heart-bg:nth-child(4) { left: 60%; animation-duration: 7s; animation-delay: 3s; }
-        .heart-bg:nth-child(5) { left: 75%; animation-duration: 9s; animation-delay: 0.5s; }
-        .heart-bg:nth-child(6) { left: 90%; animation-duration: 6s; animation-delay: 2.5s; }
+        @keyframes flutuarFrase {
+            0% {
+                transform: translateY(0) scale(0.9);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.9;
+            }
+            85% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-105vh) scale(1);
+                opacity: 0;
+            }
+        }
 
         /* --- CONTEÚDO PRINCIPAL --- */
         .container {
@@ -264,12 +294,15 @@
 <body>
 
     <!-- Corações Flutuantes -->
-    <div class="heart-bg">💖</div>
-    <div class="heart-bg">✨</div>
-    <div class="heart-bg">🌸</div>
-    <div class="heart-bg">💕</div>
-    <div class="heart-bg">💗</div>
-    <div class="heart-bg">✨</div>
+    <div class="heart-bg" style="left: 10%; animation-duration: 6s; animation-delay: 0s;">💖</div>
+    <div class="heart-bg" style="left: 25%; animation-duration: 8s; animation-delay: 2s;">✨</div>
+    <div class="heart-bg" style="left: 40%; animation-duration: 5s; animation-delay: 1s;">🌸</div>
+    <div class="heart-bg" style="left: 60%; animation-duration: 7s; animation-delay: 3s;">💕</div>
+    <div class="heart-bg" style="left: 75%; animation-duration: 9s; animation-delay: 0.5s;">💗</div>
+    <div class="heart-bg" style="left: 90%; animation-duration: 6s; animation-delay: 2.5s;">✨</div>
+
+    <!-- Container para as Frases Flutuantes da Tradução (Geradas via JS) -->
+    <div id="container-frases"></div>
 
     <!-- Conteúdo Principal -->
     <div class="container">
@@ -282,7 +315,7 @@
 
         <!-- Botão de Música no Início -->
         <div>
-            <button class="btn-musica-inicio" onclick="tocarMusica()">🎵 Tocar música de fundo</button>
+            <button class="btn-musica-inicio" onclick="tocarMusica(this)">🎵 Tocar música de fundo</button>
         </div>
     </div>
 
@@ -293,8 +326,8 @@
         </div>
     </div>
 
-    <!-- Elemento de Áudio -->
-    <audio id="background-music" preload="auto" loop>
+    <!-- Elemento de Áudio corrigido -->
+    <audio id="background-music" loop>
         <source src="mercy.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
@@ -304,10 +337,22 @@
         const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
         let indiceFoto = 0;
         let intervaloSlides;
+        let geradorFrasesID = null;
+
+        // Trechos da tradução para aparecerem em sincronia no fundo
+        const trechosMusica = [
+            "Tem piedade de mim...",
+            "Me dê um pouco de céu...",
+            "Estou caindo de joelhos...",
+            "Mostre um pouco de amor...",
+            "Você é diferente, de outro mundo...",
+            "Sua voz me faz feliz...",
+            "Como o sol e a lua...",
+            "O nosso eclipse..."
+        ];
 
         function fuger(btn) {
             btn.style.position = 'fixed';
-            
             const margem = 30;
             const larguraMax = window.innerWidth - btn.offsetWidth - margem;
             const alturaMax = window.innerHeight - btn.offsetHeight - margem;
@@ -317,6 +362,51 @@
 
             btn.style.left = novaX + 'px';
             btn.style.top = novaY + 'px';
+        }
+
+        // Sistema para soltar frases flutuantes sincronizadas
+        function iniciarFrasesFlutuantes() {
+            if (geradorFrasesID) return;
+            
+            geradorFrasesID = setInterval(() => {
+                const container = document.getElementById('container-frases');
+                const p = document.createElement('div');
+                p.className = 'frase-flutuante';
+                
+                // Escolhe um trecho aleatório da música
+                p.innerText = trechosMusica[Math.floor(Math.random() * trechosMusica.length)];
+                
+                // Posição horizontal aleatória na tela
+                p.style.left = Math.floor(Math.random() * 75) + 10 + '%';
+                
+                container.appendChild(p);
+
+                // Remove o elemento da árvore DOM após a animação terminar (~9 segundos)
+                setTimeout(() => {
+                    p.remove();
+                }, 9000);
+            }, 3500); // Cria uma nova frase a cada 3.5 segundos
+        }
+
+        // Função segura para tocar a música
+        function tocarMusica(btnElement) {
+            const music = document.getElementById('background-music');
+            
+            music.play().then(() => {
+                btnElement.innerText = "🎶 Música a tocar...";
+                btnElement.style.background = "rgba(46, 204, 113, 0.6)";
+                iniciarFrasesFlutuantes(); // Inicia as legendas em sincronia
+            }).catch(error => {
+                console.log("Erro de autoplay:", error);
+                // Tenta forçar o carregamento e tocar de novo
+                music.load();
+                music.play().then(() => {
+                    btnElement.innerText = "🎶 Música a tocar...";
+                    iniciarFrasesFlutuantes();
+                }).catch(err => {
+                    alert("Certifique-se de que o ficheiro 'mercy.mp3' está na mesma pasta do site!");
+                });
+            });
         }
 
         // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida
@@ -355,20 +445,6 @@
                 indiceFoto = (indiceFoto + 1) % fotos.length;
                 if(imgElement) imgElement.src = fotos[indiceFoto];
             }, 3000);
-        }
-
-        function tocarMusica() {
-            const music = document.getElementById('background-music');
-            music.load();
-            
-            setTimeout(() => {
-                music.play().then(() => {
-                    event.target.innerText = "🎶 A tocar...";
-                }).catch(error => {
-                    console.log("Erro ao reproduzir áudio:", error);
-                    alert("Clica novamente no botão para iniciar a música!");
-                });
-            }, 300);
         }
 
         // Passo 3: Pergunta do sábado
