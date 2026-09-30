@@ -176,13 +176,16 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .frase-oculos {
-            font-size: 1rem;
+        .frase-declaracao {
+            font-size: 0.95rem;
             color: #ffffff;
             margin-bottom: 20px;
-            font-weight: 700;
+            font-weight: 600;
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            font-style: italic;
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            border-radius: 15px;
         }
 
         .botoes-duvida {
@@ -198,15 +201,6 @@
             padding: 10px 20px;
             font-size: 1rem;
             flex: 1;
-        }
-
-        .btn-duvida-nao {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            color: white;
-            padding: 10px 20px;
-            font-size: 1rem;
-            flex: 1;
-            transition: left 0.2s ease, top 0.2s ease;
         }
 
         .btn-confirmar {
@@ -279,7 +273,7 @@
 
     <!-- Conteúdo Principal -->
     <div class="container">
-        <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
+        <h1>Eimy Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
 
         <div class="botoes">
             <button id="btn-sim" onclick="abrirModalDuvida()">Sim!</button>
@@ -325,31 +319,30 @@
             btn.style.top = novaY + 'px';
         }
 
-        // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida com o GIF
+        // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida
         function abrirModalDuvida() {
             const modal = document.getElementById('meuModal');
             const modalCorpo = document.getElementById('modalCorpo');
             
             modal.style.display = 'flex';
-            clearInterval(intervaloSlides); // Limpa qualquer slideshow anterior
+            clearInterval(intervaloSlides);
 
             modalCorpo.innerHTML = `
                 <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Dúvida pensativa">
-                <h2>Você vai aceitar mesmo? 🤔</h2>
+                <h2>Você vai aceitar mesmo?</h2>
                 <div class="botoes-duvida">
-                    <button class="btn-duvida-sim" onclick="abrirSlideshowFotos()">Com certeza! ❤</button>
-                    <button class="btn-duvida-nao" onmouseover="fuger(this)" onclick="fuger(this)">Pensando...</button>
+                    <button class="btn-duvida-sim" onclick="abrirSlideshowFotos()">Com certeza!</button>
                 </div>
             `;
         }
 
-        // Passo 2: Após confirmar a dúvida, abre o carrossel de fotos
+        // Passo 2: Após confirmar, abre o carrossel de fotos com a declaração
         function abrirSlideshowFotos() {
             const modalCorpo = document.getElementById('modalCorpo');
             
             modalCorpo.innerHTML = `
                 <img id="foto-slide" src="foto1.png" alt="Emilly Cássia">
-                <p class="frase-oculos">"Eu já via sua beleza antes mesmo de ter o óculos!"</p>
+                <p class="frase-declaracao">Eu já via sua beleza antes mesmo de ter o óculos, você é diferente como se fosse de outro mundo, e eu não só vejo a sua beleza mas também quem você é, seu jeito de falar, seu jeito de pensar, sua mensagem me faz feliz, escutar sua voz também me faz feliz!</p>
                 <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
             `;
             
@@ -378,14 +371,14 @@
             }, 300);
         }
 
-        // Passo 3: Pergunta do fim de semana
+        // Passo 3: Pergunta do fim de semana / App para assistir juntos
         function proximaEtapa() {
-            clearInterval(intervaloSlides); // Para o slideshow
+            clearInterval(intervaloSlides);
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
                 <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
-                <h2>Vai estar livre no fim de semana? 😊</h2>
-                <button class="btn-confirmar" onclick="finalizar()">Sim! ❤️</button>
+                <h2>Que tal testarmos aquele aplicativo que você recomendou para assistirmos a um filme juntos em breve? 🍿</h2>
+                <button class="btn-confirmar" onclick="finalizar()">Combinado! ❤️</button>
             `;
         }
 
