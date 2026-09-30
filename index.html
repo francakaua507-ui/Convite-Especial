@@ -139,14 +139,18 @@
         }
 
         .modal-content {
-            background: transparent;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 25px 20px;
+            border-radius: 25px;
             max-width: 380px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             text-align: center;
             animation: popIn 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
         @keyframes popIn {
@@ -156,24 +160,42 @@
 
         .modal-content img {
             width: 100%;
-            max-width: 210px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            max-width: 220px;
+            height: auto;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            object-fit: cover;
         }
 
         .modal-content h2 {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .frase-oculos {
+            font-size: 1rem;
             color: #ffffff;
             margin-bottom: 20px;
-            line-height: 1.4;
-            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            font-style: italic;
         }
 
         .btn-confirmar {
             background: linear-gradient(135deg, #ff758c, #ff7eb3);
             color: white;
             width: 100%;
+        }
+
+        .btn-prosseguir {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
         }
 
         .btn-mais {
@@ -186,7 +208,7 @@
         .caixa-mensagem {
             margin-top: 20px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             border-radius: 22px;
             color: #2c3e50;
@@ -249,19 +271,25 @@
     <!-- Pop-up Modal -->
     <div id="meuModal" class="modal-overlay">
         <div id="modalCorpo" class="modal-content">
-            <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
-            <h2>Vai estar livre no fim de semana? 😊</h2>
-            <button class="btn-confirmar" onclick="finalizar()">Sim! ❤️</button>
+            <!-- Slideshow das Fotos -->
+            <img id="foto-slide" src="foto1.jpg" alt="Emilly Cássia">
+            <p class="frase-oculos">"Eu já via sua beleza antes mesmo de ter o óculos!"</p>
+            <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
         </div>
     </div>
 
     <!-- Elemento de Áudio -->
     <audio id="background-music" preload="auto" loop>
-        <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
+        <source src="mercy.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
         
     <script>
+        // Array com os nomes das fotos locais
+        const fotos = ["foto1.jpg", "foto2.jpg", "foto3.jpg", "foto4.jpg"];
+        let indiceFoto = 0;
+        let intervaloSlides;
+
         function fuger(btn) {
             btn.style.position = 'fixed';
             
@@ -278,13 +306,22 @@
 
         function abrirModal() {
             document.getElementById('meuModal').style.display = 'flex';
+            
+            // Inicia a troca automática das fotos a cada 3 segundos
+            indiceFoto = 0;
+            document.getElementById('foto-slide').src = fotos[indiceFoto];
+            
+            clearInterval(intervaloSlides);
+            intervaloSlides = setInterval(() => {
+                indiceFoto = (indiceFoto + 1) % fotos.length;
+                document.getElementById('foto-slide').src = fotos[indiceFoto];
+            }, 3000);
         }
 
         function tocarMusica() {
             const music = document.getElementById('background-music');
             music.load();
             
-            // Dá um pequeno espaço de tempo para o áudio se preparar antes de dar o play
             setTimeout(() => {
                 music.play().then(() => {
                     event.target.innerText = "🎶 A tocar...";
@@ -293,6 +330,17 @@
                     alert("Clica novamente no botão para iniciar a música!");
                 });
             }, 300);
+        }
+
+        // Nova etapa ao clicar no botão "Prosseguir"
+        function proximaEtapa() {
+            clearInterval(intervaloSlides); // Para o slideshow
+            const modalCorpo = document.getElementById('modalCorpo');
+            modalCorpo.innerHTML = `
+                <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
+                <h2>Vai estar livre no fim de semana? 😊</h2>
+                <button class="btn-confirmar" onclick="finalizar()">Sim! ❤️</button>
+            `;
         }
 
         function finalizar() {
@@ -329,4 +377,4 @@
         }
     </script>
 </body>
-</html>
+</html>s
