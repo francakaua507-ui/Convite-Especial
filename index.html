@@ -3,249 +3,426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Eimy 💛</title>
+    <title>Um convite especial</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-            color: #ffffff;
-            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a1c4fd 100%);
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
             position: relative;
         }
 
-        /* Corações flutuantes no fundo */
-        .heart {
+        /* --- CORAÇÕES NO FUNDO --- */
+        .heart-bg {
             position: absolute;
-            color: rgba(255, 183, 3, 0.2);
-            font-size: 20px;
-            animation: floatHeart 6s linear infinite;
+            font-size: 1.6rem;
+            user-select: none;
             pointer-events: none;
-            z-index: 1;
+            animation: flutuar 7s linear infinite;
+            bottom: -50px;
+            opacity: 0.7;
         }
 
-        @keyframes floatHeart {
+        @keyframes flutuar {
             0% {
-                transform: translateY(100vh) scale(0.8);
+                transform: translateY(0) rotate(0deg) scale(0.8);
                 opacity: 0;
             }
-            50% {
+            20% {
                 opacity: 0.8;
             }
             100% {
-                transform: translateY(-10vh) scale(1.2);
+                transform: translateY(-110vh) rotate(360deg) scale(1.3);
                 opacity: 0;
             }
         }
 
+        .heart-bg:nth-child(1) { left: 10%; animation-duration: 6s; animation-delay: 0s; }
+        .heart-bg:nth-child(2) { left: 25%; animation-duration: 8s; animation-delay: 2s; }
+        .heart-bg:nth-child(3) { left: 40%; animation-duration: 5s; animation-delay: 1s; }
+        .heart-bg:nth-child(4) { left: 60%; animation-duration: 7s; animation-delay: 3s; }
+        .heart-bg:nth-child(5) { left: 75%; animation-duration: 9s; animation-delay: 0.5s; }
+        .heart-bg:nth-child(6) { left: 90%; animation-duration: 6s; animation-delay: 2.5s; }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
         .container {
-            position: relative;
-            z-index: 2;
-            width: 90%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-        }
-
-        .step {
-            display: none;
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        .step.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            background: transparent;
+            padding: 20px;
+            max-width: 420px;
+            width: 100%;
+            z-index: 10;
         }
 
         h1 {
-            font-size: 1.8rem;
+            color: #ffffff;
+            font-size: 1.7rem;
+            margin-bottom: 30px;
+            font-weight: 800;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+            line-height: 1.4;
+        }
+
+        .botoes {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            min-height: 50px;
             margin-bottom: 20px;
-            color: #ffb703;
         }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            color: #e2e2e2;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #ffb703, #fb8500);
-            color: #1a1a2e;
-            border: none;
-            padding: 12px 30px;
+        button {
+            padding: 14px 32px;
             font-size: 1.1rem;
             font-weight: bold;
-            border-radius: 30px;
+            border: none;
+            border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 5px 15px rgba(251, 133, 0, 0.4);
-            margin: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+            transition: transform 0.1s ease, background 0.3s ease;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(251, 133, 0, 0.6);
+        button:active {
+            transform: scale(0.95);
         }
 
-        /* Slideshow de fotos */
-        .slideshow-container {
-            position: relative;
-            max-width: 100%;
-            height: 300px;
-            margin: 20px 0;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px solid rgba(255, 183, 3, 0.3);
+        #btn-sim {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
         }
 
-        .slide {
+        #btn-nao {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            transition: left 0.2s ease, top 0.2s ease;
+            z-index: 99;
+        }
+
+        .btn-musica-inicio {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- POP-UP MODAL --- */
+        .modal-overlay {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 25px 20px;
+            border-radius: 25px;
+            max-width: 380px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+            animation: popIn 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-width: 220px;
+            height: auto;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
             object-fit: cover;
         }
 
-        .slide.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+        .modal-content h2 {
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .frase-oculos {
+            font-size: 1rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            font-style: italic;
+        }
+
+        .botoes-duvida {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .btn-duvida-sim {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            flex: 1;
+        }
+
+        .btn-duvida-nao {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            flex: 1;
+            transition: left 0.2s ease, top 0.2s ease;
+        }
+
+        .btn-confirmar {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-prosseguir {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-mais {
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            color: #2c3e50;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .caixa-mensagem {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 22px;
+            color: #2c3e50;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            animation: popIn 0.4s ease;
+            text-align: center;
+        }
+
+        .texto-curiosidade {
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            color: #d63031;
+            font-weight: 800;
+        }
+
+        .easter-egg-18 {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #2d3436;
+            opacity: 0.9;
+            border-top: 1px dashed rgba(0, 0, 0, 0.15);
+            padding-top: 12px;
+        }
+
+        .icone-sucesso {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
     </style>
 </head>
 <body>
 
-    <!-- Elemento de áudio escondido (Shawn Mendes - Mercy) -->
-    <audio id="bg-audio" loop>
-        <!-- Substitui o link abaixo pelo link direto do ficheiro de áudio se necessário -->
-        <source src="" type="audio/mp3">
-        Seu navegador não支持 áudio.
-    </audio>
+    <!-- Corações Flutuantes -->
+    <div class="heart-bg">💖</div>
+    <div class="heart-bg">✨</div>
+    <div class="heart-bg">🌸</div>
+    <div class="heart-bg">💕</div>
+    <div class="heart-bg">💗</div>
+    <div class="heart-bg">✨</div>
 
+    <!-- Conteúdo Principal -->
     <div class="container">
-        <!-- Passo 1: Início / Boas-vindas -->
-        <div class="step active" id="step-1">
-            <h1>Ei, Eimy... 💛</h1>
-            <p>Preparei algo especial aqui só para ti. Queres ver?</p>
-            <button class="btn" onclick="nextStep(2)">Começar</button>
+        <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
+
+        <div class="botoes">
+            <button id="btn-sim" onclick="abrirModalDuvida()">Sim!</button>
+            <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
         </div>
 
-        <!-- Passo 2: Pergunta de aceitação -->
-        <div class="step" id="step-2">
-            <h1>Uma surpresa dedicada a ti</h1>
-            <p>Antes de avançarmos, aceitas embarcar nesta pequena surpresa?</p>
-            <button class="btn" onclick="acceptInvitation()">Com certeza!</button>
-        </div>
-
-        <!-- Passo 3: A Declaração principal (Após aceitar) -->
-        <div class="step" id="step-3">
-            <h1>De outro mundo ✨</h1>
-            <p>Eu já via sua beleza antes mesmo de ter os óculos... Você é diferente, como se fosse de outro mundo.</p>
-            <p>E eu não só vejo a sua beleza, mas também quem você é: o seu jeito de falar, o seu jeito de pensar... A sua mensagem me faz feliz, e escutar a sua voz também me faz feliz!</p>
-            <button class="btn" onclick="nextStep(4)">Continuar</button>
-        </div>
-
-        <!-- Passo 4: Slideshow de fotos / Memórias -->
-        <div class="step" id="step-4">
-            <h1>Momentos & Sorrisos</h1>
-            <div class="slideshow-container">
-                <!-- Coloca aqui os links das fotos ou os nomes dos ficheiros de imagem -->
-                <img src="foto1.jpg" class="slide active" alt="Foto 1">
-                <img src="foto2.jpg" class="slide" alt="Foto 2">
-                <img src="foto3.jpg" class="slide" alt="Foto 3">
-            </div>
-            <p>Cada detalhe pensado com carinho.</p>
-            <button class="btn" onclick="nextStep(5)">Avançar</button>
-        </div>
-
-        <!-- Passo 5: Conclusão / Convite para Filme -->
-        <div class="step" id="step-5">
-            <h1>Próximo passo? 🍿</h1>
-            <p>Que tal testarmos aquele aplicativo que recomendaste para assistirmos a um filme juntos em breve?</p>
-            <button class="btn" onclick="finishExperience()">Combinado!</button>
-        </div>
-
-        <!-- Passo 6: Fim -->
-        <div class="step" id="step-6">
-            <h1>Feito com todo o coração 💛</h1>
-            <p>Obrigado por seres quem és. Espero que tenhas gostado desta surpresa!</p>
+        <!-- Botão de Música no Início -->
+        <div>
+            <button class="btn-musica-inicio" onclick="tocarMusica()">🎵 Tocar música de fundo</button>
         </div>
     </div>
 
+    <!-- Pop-up Modal -->
+    <div id="meuModal" class="modal-overlay">
+        <div id="modalCorpo" class="modal-content">
+            <!-- Conteúdo dinâmico inserido via script -->
+        </div>
+    </div>
+
+    <!-- Elemento de Áudio -->
+    <audio id="background-music" preload="auto" loop>
+        <source src="mercy.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio.
+    </audio>
+        
     <script>
-        // Função para avançar entre os passos e garantir reprodução da música
-        function nextStep(stepNumber) {
-            // Tenta reproduzir a música no primeiro clique/interação
-            const audio = document.getElementById('bg-audio');
-            if (audio.paused) {
-                audio.play().catch(e => console.log("Áudio aguardando interação:", e));
-            }
+        // Array com os nomes das fotos locais
+        const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
+        let indiceFoto = 0;
+        let intervaloSlides;
 
-            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-            document.getElementById('step-' + stepNumber).classList.add('active');
+        function fuger(btn) {
+            btn.style.position = 'fixed';
+            
+            const margem = 30;
+            const larguraMax = window.innerWidth - btn.offsetWidth - margem;
+            const alturaMax = window.innerHeight - btn.offsetHeight - margem;
+
+            const novaX = Math.max(margem, Math.floor(Math.random() * larguraMax));
+            const novaY = Math.max(margem, Math.floor(Math.random() * alturaMax));
+
+            btn.style.left = novaX + 'px';
+            btn.style.top = novaY + 'px';
         }
 
-        function acceptInvitation() {
-            nextStep(3);
+        // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida com o GIF
+        function abrirModalDuvida() {
+            const modal = document.getElementById('meuModal');
+            const modalCorpo = document.getElementById('modalCorpo');
+            
+            modal.style.display = 'flex';
+            clearInterval(intervaloSlides); // Limpa qualquer slideshow anterior
+
+            modalCorpo.innerHTML = `
+                <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Dúvida pensativa">
+                <h2>Você vai aceitar mesmo? 🤔</h2>
+                <div class="botoes-duvida">
+                    <button class="btn-duvida-sim" onclick="abrirSlideshowFotos()">Com certeza! ❤</button>
+                    <button class="btn-duvida-nao" onmouseover="fuger(this)" onclick="fuger(this)">Pensando...</button>
+                </div>
+            `;
         }
 
-        function finishExperience() {
-            nextStep(6);
+        // Passo 2: Após confirmar a dúvida, abre o carrossel de fotos
+        function abrirSlideshowFotos() {
+            const modalCorpo = document.getElementById('modalCorpo');
+            
+            modalCorpo.innerHTML = `
+                <img id="foto-slide" src="foto1.png" alt="Emilly Cássia">
+                <p class="frase-oculos">"Eu já via sua beleza antes mesmo de ter o óculos!"</p>
+                <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
+            `;
+            
+            // Inicia a troca automática das fotos a cada 3 segundos
+            indiceFoto = 0;
+            const imgElement = document.getElementById('foto-slide');
+            
+            clearInterval(intervaloSlides);
+            intervaloSlides = setInterval(() => {
+                indiceFoto = (indiceFoto + 1) % fotos.length;
+                if(imgElement) imgElement.src = fotos[indiceFoto];
+            }, 3000);
         }
 
-        // Sistema simples de Slideshow automático
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-
-        function showSlide() {
-            slides.forEach(slide => slide.classList.remove('active'));
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
-
-        if (slides.length > 0) {
-            setInterval(showSlide, 3500); // Muda de foto a cada 3.5 segundos
-        }
-
-        // Criar corações flutuantes dinamicamente no fundo
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '💛';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            document.body.appendChild(heart);
-
+        function tocarMusica() {
+            const music = document.getElementById('background-music');
+            music.load();
+            
             setTimeout(() => {
-                heart.remove();
-            }, 6000);
+                music.play().then(() => {
+                    event.target.innerText = "🎶 A tocar...";
+                }).catch(error => {
+                    console.log("Erro ao reproduzir áudio:", error);
+                    alert("Clica novamente no botão para iniciar a música!");
+                });
+            }, 300);
         }
 
-        setInterval(createHeart, 500);
+        // Passo 3: Pergunta do fim de semana
+        function proximaEtapa() {
+            clearInterval(intervaloSlides); // Para o slideshow
+            const modalCorpo = document.getElementById('modalCorpo');
+            modalCorpo.innerHTML = `
+                <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
+                <h2>Vai estar livre no fim de semana? 😊</h2>
+                <button class="btn-confirmar" onclick="finalizar()">Sim! ❤️</button>
+            `;
+        }
+
+        // Passo 4: Mensagem final de sucesso
+        function finalizar() {
+            const modalCorpo = document.getElementById('modalCorpo');
+            modalCorpo.innerHTML = `
+                <div class="icone-sucesso">🥳💖</div>
+                <h2>Ebaaa! 🎉<br><br>Depois você me diz qual horário fica melhor para você! 😊</h2>
+                
+                <button id="btnMais" class="btn-mais" onclick="revelarSegredo()">Mais? 👀</button>
+                <div id="secaoSegredo"></div>
+            `;
+        }
+
+        // Passo 5: Easter egg e segredo final
+        function revelarSegredo() {
+            document.getElementById('btnMais').style.display = 'none';
+
+            const secao = document.getElementById('secaoSegredo');
+            secao.innerHTML = `
+                <div class="caixa-mensagem">
+                    <p class="texto-curiosidade">
+                        Eimy curiosa, você sabia que a curiosidade matou o gato, né? Mas no seu caso é uma gatinha! 😼
+                    </p>
+                    
+                    ☀️🌙 <b>Um detalhe especial:</b><br>
+                    Lembra quando a gente só conversava pelo chat do jogo no Mobile Legends e eu disse que a gente parecia o sol e a lua? Então... acho que finalmente chegou a hora de acontecer o nosso eclipse! 🙈✨
+                    <br><br>
+                    Eii, não importa o quão difícil esteja sendo para você, Eimy: pra qualquer coisa, pode contar comigo sempre, tá? ❤️
+                    
+                    <div class="easter-egg-18">
+                        🎁 <i>E como é meu aniversário de 18 anos, ter você aceitando esse convite já valeu como o melhor presente! 😂🎂</i>
+                    </div>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
