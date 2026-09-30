@@ -257,7 +257,7 @@
 
     <!-- Elemento de Áudio -->
     <audio id="background-music" loop>
-        <source src="Mercy.MP3" type="audio/mpeg">
+        <source src="mercy.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
 
@@ -282,11 +282,12 @@
 
         function tocarMusica() {
             const music = document.getElementById('background-music');
+            music.load(); 
             music.play().then(() => {
-                // Feedback visual leve no botão
                 event.target.innerText = "🎶 A tocar...";
             }).catch(error => {
                 console.log("Erro ao reproduzir áudio:", error);
+                alert("Clica novamente no botão para iniciar a música!");
             });
         }
 
