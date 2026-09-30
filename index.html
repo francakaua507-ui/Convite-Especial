@@ -256,11 +256,11 @@
     </div>
 
     <!-- Elemento de Áudio -->
-    <audio id="background-music" loop>
+    <audio id="background-music" preload="auto" loop>
         <source src="mercy.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
-
+        
     <script>
         function fuger(btn) {
             btn.style.position = 'fixed';
@@ -282,13 +282,17 @@
 
         function tocarMusica() {
             const music = document.getElementById('background-music');
-            music.load(); 
-            music.play().then(() => {
-                event.target.innerText = "🎶 A tocar...";
-            }).catch(error => {
-                console.log("Erro ao reproduzir áudio:", error);
-                alert("Clica novamente no botão para iniciar a música!");
-            });
+            music.load();
+            
+            // Dá um pequeno espaço de tempo para o áudio se preparar antes de dar o play
+            setTimeout(() => {
+                music.play().then(() => {
+                    event.target.innerText = "🎶 A tocar...";
+                }).catch(error => {
+                    console.log("Erro ao reproduzir áudio:", error);
+                    alert("Clica novamente no botão para iniciar a música!");
+                });
+            }, 300);
         }
 
         function finalizar() {
