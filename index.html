@@ -185,6 +185,30 @@
             font-style: italic;
         }
 
+        .botoes-duvida {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .btn-duvida-sim {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            flex: 1;
+        }
+
+        .btn-duvida-nao {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            flex: 1;
+            transition: left 0.2s ease, top 0.2s ease;
+        }
+
         .btn-confirmar {
             background: linear-gradient(135deg, #ff758c, #ff7eb3);
             color: white;
@@ -258,7 +282,7 @@
         <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
 
         <div class="botoes">
-            <button id="btn-sim" onclick="abrirModal()">Sim!</button>
+            <button id="btn-sim" onclick="abrirModalDuvida()">Sim!</button>
             <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
         </div>
 
@@ -271,10 +295,7 @@
     <!-- Pop-up Modal -->
     <div id="meuModal" class="modal-overlay">
         <div id="modalCorpo" class="modal-content">
-            <!-- Slideshow das Fotos -->
-            <img id="foto-slide" src="foto1.jpg" alt="Emilly Cássia">
-            <p class="frase-oculos">"Eu já via sua beleza antes mesmo de ter o óculos!"</p>
-            <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
+            <!-- Conteúdo dinâmico inserido via script -->
         </div>
     </div>
 
@@ -304,17 +325,42 @@
             btn.style.top = novaY + 'px';
         }
 
-        function abrirModal() {
-            document.getElementById('meuModal').style.display = 'flex';
+        // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida com o GIF
+        function abrirModalDuvida() {
+            const modal = document.getElementById('meuModal');
+            const modalCorpo = document.getElementById('modalCorpo');
+            
+            modal.style.display = 'flex';
+            clearInterval(intervaloSlides); // Limpa qualquer slideshow anterior
+
+            modalCorpo.innerHTML = `
+                <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Dúvida pensativa">
+                <h2>Você vai aceitar mesmo? 🤔</h2>
+                <div class="botoes-duvida">
+                    <button class="btn-duvida-sim" onclick="abrirSlideshowFotos()">Com certeza! ❤️️</button>
+                    <button class="btn-duvida-nao" onmouseover="fuger(this)" onclick="fuger(this)">Pensando...</button>
+                </div>
+            `;
+        }
+
+        // Passo 2: Após confirmar a dúvida, abre o carrossel de fotos
+        function abrirSlideshowFotos() {
+            const modalCorpo = document.getElementById('modalCorpo');
+            
+            modalCorpo.innerHTML = `
+                <img id="foto-slide" src="foto1.png" alt="Emilly Cássia">
+                <p class="frase-oculos">"Eu já via sua beleza antes mesmo de ter o óculos!"</p>
+                <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
+            `;
             
             // Inicia a troca automática das fotos a cada 3 segundos
             indiceFoto = 0;
-            document.getElementById('foto-slide').src = fotos[indiceFoto];
+            const imgElement = document.getElementById('foto-slide');
             
             clearInterval(intervaloSlides);
             intervaloSlides = setInterval(() => {
                 indiceFoto = (indiceFoto + 1) % fotos.length;
-                document.getElementById('foto-slide').src = fotos[indiceFoto];
+                if(imgElement) imgElement.src = fotos[indiceFoto];
             }, 3000);
         }
 
@@ -332,7 +378,7 @@
             }, 300);
         }
 
-        // Nova etapa ao clicar no botão "Prosseguir"
+        // Passo 3: Pergunta do fim de semana
         function proximaEtapa() {
             clearInterval(intervaloSlides); // Para o slideshow
             const modalCorpo = document.getElementById('modalCorpo');
@@ -343,6 +389,7 @@
             `;
         }
 
+        // Passo 4: Mensagem final de sucesso
         function finalizar() {
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
@@ -354,6 +401,7 @@
             `;
         }
 
+        // Passo 5: Easter egg e segredo final
         function revelarSegredo() {
             document.getElementById('btnMais').style.display = 'none';
 
@@ -377,4 +425,4 @@
         }
     </script>
 </body>
-</html>s
+</html>
