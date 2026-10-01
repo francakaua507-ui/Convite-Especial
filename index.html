@@ -25,7 +25,7 @@
             position: relative;
         }
 
-        /* --- CORAÇÕES NO FUNDO --- */
+        /* --- ELEMENTOS FLUTUANTES NO FUNDO (Corações e Frases) --- */
         .heart-bg {
             position: absolute;
             font-size: 1.6rem;
@@ -34,6 +34,26 @@
             animation: flutuar 7s linear infinite;
             bottom: -50px;
             opacity: 0.7;
+            z-index: 1;
+        }
+
+        .frase-flutuante {
+            position: absolute;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 6px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            user-select: none;
+            pointer-events: none;
+            animation: flutuarFrase 9s linear infinite;
+            bottom: -50px;
+            opacity: 0;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            max-width: 250px;
+            text-align: center;
         }
 
         @keyframes flutuar {
@@ -50,12 +70,22 @@
             }
         }
 
-        .heart-bg:nth-child(1) { left: 10%; animation-duration: 6s; animation-delay: 0s; }
-        .heart-bg:nth-child(2) { left: 25%; animation-duration: 8s; animation-delay: 2s; }
-        .heart-bg:nth-child(3) { left: 40%; animation-duration: 5s; animation-delay: 1s; }
-        .heart-bg:nth-child(4) { left: 60%; animation-duration: 7s; animation-delay: 3s; }
-        .heart-bg:nth-child(5) { left: 75%; animation-duration: 9s; animation-delay: 0.5s; }
-        .heart-bg:nth-child(6) { left: 90%; animation-duration: 6s; animation-delay: 2.5s; }
+        @keyframes flutuarFrase {
+            0% {
+                transform: translateY(0) scale(0.9);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.9;
+            }
+            85% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-105vh) scale(1);
+                opacity: 0;
+            }
+        }
 
         /* --- CONTEÚDO PRINCIPAL --- */
         .container {
@@ -139,14 +169,18 @@
         }
 
         .modal-content {
-            background: transparent;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 25px 20px;
+            border-radius: 25px;
             max-width: 380px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             text-align: center;
             animation: popIn 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
         @keyframes popIn {
@@ -156,25 +190,60 @@
 
         .modal-content img {
             width: 100%;
-            max-width: 210px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-            transition: opacity 0.5s ease-in-out;
+            max-width: 220px;
+            height: auto;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            object-fit: cover;
         }
 
         .modal-content h2 {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .frase-declaracao {
+            font-size: 0.95rem;
             color: #ffffff;
             margin-bottom: 20px;
-            line-height: 1.4;
-            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            border-radius: 15px;
+        }
+
+        .botoes-duvida {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .btn-duvida-sim {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            flex: 1;
         }
 
         .btn-confirmar {
             background: linear-gradient(135deg, #ff758c, #ff7eb3);
             color: white;
             width: 100%;
+        }
+
+        .btn-prosseguir {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
         }
 
         .btn-mais {
@@ -187,7 +256,7 @@
         .caixa-mensagem {
             margin-top: 20px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             border-radius: 22px;
             color: #2c3e50;
@@ -225,23 +294,25 @@
 <body>
 
     <!-- Corações Flutuantes -->
-    <div class="heart-bg">💖</div>
-    <div class="heart-bg">✨</div>
-    <div class="heart-bg">🌸</div>
-    <div class="heart-bg">💕</div>
-    <div class="heart-bg">💗</div>
-    <div class="heart-bg">✨</div>
+    <div class="heart-bg" style="left: 10%; animation-duration: 6s; animation-delay: 0s;">💖</div>
+    <div class="heart-bg" style="left: 25%; animation-duration: 8s; animation-delay: 2s;">✨</div>
+    <div class="heart-bg" style="left: 40%; animation-duration: 5s; animation-delay: 1s;">🌸</div>
+    <div class="heart-bg" style="left: 60%; animation-duration: 7s; animation-delay: 3s;">💕</div>
+    <div class="heart-bg" style="left: 75%; animation-duration: 9s; animation-delay: 0.5s;">💗</div>
+    <div class="heart-bg" style="left: 90%; animation-duration: 6s; animation-delay: 2.5s;">✨</div>
+
+    <!-- Container para as Frases Flutuantes da Tradução -->
+    <div id="container-frases"></div>
 
     <!-- Conteúdo Principal -->
     <div class="container">
         <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
 
         <div class="botoes">
-            <button id="btn-sim" onclick="abrirModal()">Sim!</button>
+            <button id="btn-sim" onclick="clicarSimPrincipal()">Sim!</button>
             <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
         </div>
 
-        <!-- Botão de Música no Início -->
         <div>
             <button class="btn-musica-inicio" onclick="tocarMusica(this)">🎵 Tocar música de fundo</button>
         </div>
@@ -249,52 +320,16 @@
 
     <!-- Pop-up Modal -->
     <div id="meuModal" class="modal-overlay">
-        <div id="modalCorpo" class="modal-content">
-            <img id="imagemSlide" src="foto1.png" alt="Foto especial">
-            <h2>Vai estar livre no fim de semana? 😊</h2>
-            <button class="btn-confirmar" onclick="finalizar()">Sim! ❤️</button>
-        </div>
+        <div id="modalCorpo" class="modal-content"></div>
     </div>
 
-    <!-- Elemento de Áudio Oculto -->
+    <!-- Elemento de Áudio Oculto (Força o navegador a rodar sem poluir a tela) -->
     <audio id="background-music" preload="auto" loop>
-        <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio.
-    </audio>
-        
+    <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
+</audio>
+   <!-- Container para as Frases Flutuantes da Tradução -->
+<div id="container-frases"></div>     
     <script>
-        // Array de fotos da pasta principal
-        const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
-        let indiceFoto = 0;
-        let intervaloSlides = null;
-
-        function fuger(btn) {
-            btn.style.position = 'fixed';
-            
-            const margem = 30;
-            const larguraMax = window.innerWidth - btn.offsetWidth - margem;
-            const alturaMax = window.innerHeight - btn.offsetHeight - margem;
-
-            const novaX = Math.max(margem, Math.floor(Math.random() * larguraMax));
-            const novaY = Math.max(margem, Math.floor(Math.random() * alturaMax));
-
-            btn.style.left = novaX + 'px';
-            btn.style.top = novaY + 'px';
-        }
-
-        function abrirModal() {
-            document.getElementById('meuModal').style.display = 'flex';
-            
-            // Inicia a rotação automática das fotos no modal a cada 3 segundos
-            intervaloSlides = setInterval(() => {
-                indiceFoto = (indiceFoto + 1) % fotos.length;
-                const imgElement = document.getElementById('imagemSlide');
-                if(imgElement) {
-                    imgElement.src = fotos[indiceFoto];
-                }
-            }, 3000);
-        }
-
         function tocarMusica(btn) {
             const music = document.getElementById('background-music');
             music.load();
@@ -309,11 +344,146 @@
                 });
             }, 300);
         }
+        const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
+        let indiceFoto = 0;
+        let intervaloSlides;
+        let geradorFrasesID = null;
 
+        const trechosMusica = [
+            "Tem piedade de mim...",
+            "Me dê um pouco de céu...",
+            "Estou caindo de joelhos...",
+            "Mostre um pouco de amor...",
+            "Você é diferente, de outro mundo...",
+            "Sua voz me faz feliz...",
+            "Como o sol e a lua...",
+            "O nosso eclipse..."
+        ];
+
+        // Função do botão "Não" fugir
+        function fuger(btn) {
+            btn.style.position = 'fixed';
+            const margem = 30;
+            const larguraMax = window.innerWidth - btn.offsetWidth - margem;
+            const alturaMax = window.innerHeight - btn.offsetHeight - margem;
+
+            const novaX = Math.max(margem, Math.floor(Math.random() * larguraMax));
+            const novaY = Math.max(margem, Math.floor(Math.random() * alturaMax));
+
+            btn.style.left = novaX + 'px';
+            btn.style.top = novaY + 'px';
+        }
+
+        // Sistema para soltar frases flutuantes sincronizadas
+        function iniciarFrasesFlutuantes() {
+            if (geradorFrasesID) return;
+            
+            geradorFrasesID = setInterval(() => {
+                const container = document.getElementById('container-frases');
+                if (!container) return;
+
+                const p = document.createElement('div');
+                p.className = 'frase-flutuante';
+                p.innerText = trechosMusica[Math.floor(Math.random() * trechosMusica.length)];
+                p.style.left = Math.floor(Math.random() * 75) + 10 + '%';
+                
+                container.appendChild(p);
+
+                setTimeout(() => {
+                    p.remove();
+                }, 9000);
+            }, 3200);
+        }
+
+        // Função ultrarrobusta para disparar o áudio
+        async function tocarMusicaAudio() {
+            const music = document.getElementById('background-music');
+            if (!music) return;
+
+            try {
+                music.currentTime = 0;
+                let playPromise = music.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        console.log("Música tocada com sucesso!");
+                        iniciarFrasesFlutuantes();
+                    }).catch(error => {
+                        console.log("Tentativa de play bloqueada, tentando forçar...", error);
+                        // Força o play novamente caso o navegador exija interação direta do toque
+                        music.muted = false;
+                        music.play();
+                        iniciarFrasesFlutuantes();
+                    });
+                }
+            } catch (error) {
+                console.log("Erro geral no áudio:", error);
+            }
+        }
+
+        // Ação principal ao clicar em "Sim!"
+        function clicarSimPrincipal() {
+            tocarMusicaAudio();
+            abrirModalDuvida();
+        }
+
+        // Botão manual de música
+        function tocarMusica(btnElement) {
+            tocarMusicaAudio();
+            btnElement.innerText = "🎶 Música a tocar...";
+            btnElement.style.background = "rgba(46, 204, 113, 0.6)";
+        }
+
+        // Passo 1: Abre a etapa de dúvida
+        function abrirModalDuvida() {
+            const modal = document.getElementById('meuModal');
+            const modalCorpo = document.getElementById('modalCorpo');
+            
+            modal.style.display = 'flex';
+            clearInterval(intervaloSlides);
+
+            modalCorpo.innerHTML = `
+                <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Dúvida pensativa">
+                <h2>Você vai aceitar mesmo?</h2>
+                <div class="botoes-duvida">
+                    <button class="btn-duvida-sim" onclick="abrirSlideshowFotos()">Com certeza!</button>
+                </div>
+            `;
+        }
+
+        // Passo 2: Abre o carrossel de fotos com a declaração
+        function abrirSlideshowFotos() {
+            const modalCorpo = document.getElementById('modalCorpo');
+            
+            modalCorpo.innerHTML = `
+                <img id="foto-slide" src="foto1.png" alt="Emilly Cássia">
+                <p class="frase-declaracao">Eu já via sua beleza antes mesmo de ter os óculos, você é diferente como se fosse de outro mundo, e eu não só vejo a sua beleza mas também quem você é, seu jeito de falar, seu jeito de pensar, sua mensagem me faz feliz, escutar sua voz também me faz feliz!</p>
+                <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
+            `;
+            
+            indiceFoto = 0;
+            const imgElement = document.getElementById('foto-slide');
+            
+            clearInterval(intervaloSlides);
+            intervaloSlides = setInterval(() => {
+                indiceFoto = (indiceFoto + 1) % fotos.length;
+                if(imgElement) imgElement.src = fotos[indiceFoto];
+            }, 3000);
+        }
+
+        // Passo 3: Pergunta do final de semana
+        function proximaEtapa() {
+            clearInterval(intervaloSlides);
+            const modalCorpo = document.getElementById('modalCorpo');
+            modalCorpo.innerHTML = `
+                <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
+                <h2>Você vai estar livre no final de semana?</h2>
+                <button class="btn-confirmar" onclick="finalizar()">Sim!</button>
+            `;
+        }
+
+        // Passo 4: Mensagem final de sucesso
         function finalizar() {
-            // Para a rotação das fotos quando clica em confirmar
-            if (intervaloSlides) clearInterval(intervaloSlides);
-
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
                 <div class="icone-sucesso">🥳💖</div>
@@ -324,6 +494,7 @@
             `;
         }
 
+        // Passo 5: Easter egg e segredo final
         function revelarSegredo() {
             document.getElementById('btnMais').style.display = 'none';
 
