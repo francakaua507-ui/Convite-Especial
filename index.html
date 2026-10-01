@@ -40,8 +40,8 @@
         .frase-flutuante {
             position: absolute;
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.85);
-            background: rgba(0, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.25);
             padding: 6px 12px;
             border-radius: 20px;
             backdrop-filter: blur(4px);
@@ -98,7 +98,7 @@
 
         h1 {
             color: #ffffff;
-            font-size: 1.7rem;
+            font-size: 1.8rem;
             margin-bottom: 30px;
             font-weight: 800;
             text-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
@@ -139,17 +139,6 @@
             color: white;
             transition: left 0.2s ease, top 0.2s ease;
             z-index: 99;
-        }
-
-        .btn-musica-inicio {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            padding: 10px 24px;
-            font-size: 0.95rem;
-            border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         /* --- POP-UP MODAL --- */
@@ -301,21 +290,17 @@
     <div class="heart-bg" style="left: 75%; animation-duration: 9s; animation-delay: 0.5s;">💗</div>
     <div class="heart-bg" style="left: 90%; animation-duration: 6s; animation-delay: 2.5s;">✨</div>
 
-    <!-- Container para as Frases Flutuantes da Tradução (Geradas via JS) -->
+    <!-- Container para as Frases Flutuantes da Tradução -->
     <div id="container-frases"></div>
 
     <!-- Conteúdo Principal -->
     <div class="container">
-        <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
+        <h1>Você vai estar livre no sábado?</h1>
 
         <div class="botoes">
-            <button id="btn-sim" onclick="abrirModalDuvida()">Sim!</button>
+            <!-- Ao clicar em Sim!, a música toca e as frases iniciam por causa da interação do usuário -->
+            <button id="btn-sim" onclick="tocarMusicaEAbrirModal()">Sim!</button>
             <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
-        </div>
-
-        <!-- Botão de Música no Início -->
-        <div>
-            <button class="btn-musica-inicio" onclick="tocarMusica(this)">🎵 Tocar música de fundo</button>
         </div>
     </div>
 
@@ -326,20 +311,18 @@
         </div>
     </div>
 
-    <!-- Elemento de Áudio corrigido -->
+    <!-- Elemento de Áudio -->
     <audio id="background-music" loop>
         <source src="mercy.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
         
     <script>
-        // Array com os nomes das fotos locais
         const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
         let indiceFoto = 0;
         let intervaloSlides;
         let geradorFrasesID = null;
 
-        // Trechos da tradução para aparecerem em sincronia no fundo
         const trechosMusica = [
             "Tem piedade de mim...",
             "Me dê um pouco de céu...",
@@ -364,52 +347,44 @@
             btn.style.top = novaY + 'px';
         }
 
-        // Sistema para soltar frases flutuantes sincronizadas
         function iniciarFrasesFlutuantes() {
             if (geradorFrasesID) return;
             
             geradorFrasesID = setInterval(() => {
                 const container = document.getElementById('container-frases');
+                if (!container) return;
+                
                 const p = document.createElement('div');
                 p.className = 'frase-flutuante';
-                
-                // Escolhe um trecho aleatório da música
                 p.innerText = trechosMusica[Math.floor(Math.random() * trechosMusica.length)];
-                
-                // Posição horizontal aleatória na tela
                 p.style.left = Math.floor(Math.random() * 75) + 10 + '%';
-                
                 container.appendChild(p);
 
-                // Remove o elemento da árvore DOM após a animação terminar (~9 segundos)
                 setTimeout(() => {
                     p.remove();
                 }, 9000);
-            }, 3500); // Cria uma nova frase a cada 3.5 segundos
+            }, 3200);
         }
 
-        // Função segura para tocar a música
-        function tocarMusica(btnElement) {
+        // Toca a música e já abre o fluxo do modal garantindo permissão do navegador
+        function tocarMusicaEAbrirModal() {
             const music = document.getElementById('background-music');
             
             music.play().then(() => {
-                btnElement.innerText = "🎶 Música a tocar...";
-                btnElement.style.background = "rgba(46, 204, 113, 0.6)";
-                iniciarFrasesFlutuantes(); // Inicia as legendas em sincronia
+                iniciarFrasesFlutuantes();
             }).catch(error => {
-                console.log("Erro de autoplay:", error);
-                // Tenta forçar o carregamento e tocar de novo
+                console.log("Tentando recarregar áudio...", error);
                 music.load();
                 music.play().then(() => {
-                    btnElement.innerText = "🎶 Música a tocar...";
                     iniciarFrasesFlutuantes();
                 }).catch(err => {
-                    alert("Certifique-se de que o ficheiro 'mercy.mp3' está na mesma pasta do site!");
+                    console.log("Áudio bloqueado ou ficheiro não encontrado:", err);
                 });
             });
+
+            abrirModalDuvida();
         }
 
-        // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida
         function abrirModalDuvida() {
             const modal = document.getElementById('meuModal');
             const modalCorpo = document.getElementById('modalCorpo');
@@ -426,7 +401,6 @@
             `;
         }
 
-        // Passo 2: Após confirmar, abre o carrossel de fotos com a declaração
         function abrirSlideshowFotos() {
             const modalCorpo = document.getElementById('modalCorpo');
             
@@ -436,7 +410,6 @@
                 <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
             `;
             
-            // Inicia a troca automática das fotos a cada 3 segundos
             indiceFoto = 0;
             const imgElement = document.getElementById('foto-slide');
             
@@ -447,18 +420,16 @@
             }, 3000);
         }
 
-        // Passo 3: Pergunta do sábado
         function proximaEtapa() {
             clearInterval(intervaloSlides);
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
                 <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
-                <h2>Você vai estar livre no final de semana?</h2>
+                <h2>Você vai estar livre no sábado?</h2>
                 <button class="btn-confirmar" onclick="finalizar()">Sim!</button>
             `;
         }
 
-        // Passo 4: Mensagem final de sucesso
         function finalizar() {
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
@@ -470,7 +441,6 @@
             `;
         }
 
-        // Passo 5: Easter egg e segredo final
         function revelarSegredo() {
             document.getElementById('btnMais').style.display = 'none';
 
