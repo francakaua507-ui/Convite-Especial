@@ -323,10 +323,9 @@
         <div id="modalCorpo" class="modal-content"></div>
     </div>
 
-    <!-- Elemento de Áudio -->
+    <!-- Elemento de Áudio Oculto (Força o navegador a rodar sem poluir a tela) -->
     <audio id="background-music" preload="auto" loop>
         <source src="mercy.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio.
     </audio>
         
     <script>
@@ -381,18 +380,29 @@
             }, 3200);
         }
 
-        // Função segura para tocar a música
+        // Função ultrarrobusta para disparar o áudio
         async function tocarMusicaAudio() {
             const music = document.getElementById('background-music');
             if (!music) return;
 
             try {
                 music.currentTime = 0;
-                await music.play();
-                console.log("Música tocando com sucesso!");
-                iniciarFrasesFlutuantes();
+                let playPromise = music.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        console.log("Música tocada com sucesso!");
+                        iniciarFrasesFlutuantes();
+                    }).catch(error => {
+                        console.log("Tentativa de play bloqueada, tentando forçar...", error);
+                        // Força o play novamente caso o navegador exija interação direta do toque
+                        music.muted = false;
+                        music.play();
+                        iniciarFrasesFlutuantes();
+                    });
+                }
             } catch (error) {
-                console.log("Áudio impedido pelo navegador ou arquivo ausente:", error);
+                console.log("Erro geral no áudio:", error);
             }
         }
 
