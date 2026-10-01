@@ -50,21 +50,61 @@
         }
 
         .frase-flutuante {
-            position: absolute;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.95);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 6px 12px;
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
-            user-select: none;
-            pointer-events: none;
-            animation: flutuarFrase 9s linear forwards;
-            bottom: -50px;
-            opacity: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-            max-width: 220px;
+            position: fixed;
+            bottom: 10%;
+            max-width: 240px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 0.9rem;
             text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: subirEdesaparecer 8s ease-out forwards;
+            z-index: 999;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @keyframes subirEdesaparecer {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(-150px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-180px) scale(0.8);
+            }
+        }
+
+        /* --- ESTILO DOS CORAÇÃOZINHOS QUE SOBEM AO ESTOURAR --- */
+        .coracao-estouro {
+            position: fixed;
+            font-size: 1.2rem;
+            animation: explodirCoracao 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes explodirCoracao {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--dirX), var(--dirY)) scale(1.4);
+            }
         }
 
         @keyframes flutuar {
@@ -77,23 +117,6 @@
             }
             100% {
                 transform: translateY(-110vh) rotate(360deg) scale(1.3);
-                opacity: 0;
-            }
-        }
-
-        @keyframes flutuarFrase {
-            0% {
-                transform: translateY(0) scale(0.9);
-                opacity: 0;
-            }
-            15% {
-                opacity: 0.95;
-            }
-            85% {
-                opacity: 0.95;
-            }
-            100% {
-                transform: translateY(-105vh) scale(1);
                 opacity: 0;
             }
         }
@@ -318,7 +341,8 @@
     <div id="meuModal" class="modal-overlay">
         <div id="modalCorpo" class="modal-content"></div>
     </div>
-<!-- Elemento de Áudio Oculto -->
+
+    <!-- Elemento de Áudio Oculto -->
     <audio id="background-music" preload="auto" loop>
         <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
     </audio>
@@ -404,12 +428,10 @@
             music.addEventListener('timeupdate', () => {
                 const tempoAtual = music.currentTime;
 
-                // Procura qual legenda corresponde ao segundo atual da música
                 let legendaAtual = legendasSincronizadas.reduce((prev, curr) => {
                     return (tempoAtual >= curr.tempo) ? curr : prev;
                 }, legendasSincronizadas[0]);
 
-                // Só cria o elemento se houver uma legenda válida e para evitar duplicação em looping contínuo
                 if (legendaAtual && window.ultimaFraseExibida !== legendaAtual.texto) {
                     window.ultimaFraseExibida = legendaAtual.texto;
                     criarFraseNaTela(legendaAtual.texto);
@@ -417,7 +439,7 @@
             });
         }
 
-        // Função auxiliar que cria a caixinha flutuante na lateral
+        // Função auxiliar que cria a caixinha flutuante com margem segura nas laterais
         function criarFraseNaTela(texto) {
             const container = document.getElementById('container-frases');
             if (!container) return;
@@ -426,17 +448,49 @@
             p.className = 'frase-flutuante';
             p.innerText = texto;
             
-            // Distribui nas laterais: esquerda ou direita
+            // Garante que nasce longe das bordas extremas (evita cortes)
             const ladoEsquerdo = Math.random() < 0.5;
-            const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 16) + 2 : Math.floor(Math.random() * 16) + 72;
+            const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 20) + 5 : Math.floor(Math.random() * 20) + 60;
             p.style.left = posicaoX + '%';
             
             container.appendChild(p);
+
+            // Dispara o estouro de corações um pouco antes do balão sumir (aos 7.5 segundos)
+            setTimeout(() => {
+                lancarCoracoesEstouro(p);
+            }, 7500);
 
             // Remove o elemento após a animação terminar
             setTimeout(() => {
                 p.remove();
             }, 8000);
+        }
+
+        // Função que gera mini-corações ao estourar o balão
+        function lancarCoracoesEstouro(elementoBalao) {
+            const rect = elementoBalao.getBoundingClientRect();
+            const centroX = rect.left + rect.width / 2;
+            const centroY = rect.top;
+
+            for (let i = 0; i < 5; i++) {
+                const coracao = document.createElement('div');
+                coracao.className = 'coracao-estouro';
+                coracao.innerHTML = '💖';
+                
+                coracao.style.left = centroX + 'px';
+                coracao.style.top = centroY + 'px';
+
+                const dirX = (Math.random() - 0.5) * 100 + 'px';
+                const dirY = (Math.random() - 1) * 80 - 20 + 'px';
+                coracao.style.setProperty('--dirX', dirX);
+                coracao.style.setProperty('--dirY', dirY);
+
+                document.body.appendChild(coracao);
+
+                setTimeout(() => {
+                    coracao.remove();
+                }, 1000);
+            }
         }
 
         // Função para disparar o áudio ao clicar em "Sim!"
@@ -450,10 +504,8 @@
                 
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
-                        console.log("Música tocada com sucesso!");
                         iniciarFrasesSincronizadas();
                     }).catch(error => {
-                        console.log("Tentativa de play bloqueada, tentando forçar...", error);
                         music.muted = false;
                         music.play();
                         iniciarFrasesSincronizadas();
@@ -553,3 +605,5 @@
             `;
         }
     </script>
+</body>
+</html>
