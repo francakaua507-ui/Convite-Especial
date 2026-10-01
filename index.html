@@ -51,39 +51,39 @@
 
         .frase-flutuante {
             position: fixed;
-            bottom: 10%;
+            bottom: 5%;
             max-width: 240px;
-            padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 14px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            animation: subirEdesaparecer 8s ease-out forwards;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: subirEdesaparecer 4s ease-out forwards;
             z-index: 999;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         @keyframes subirEdesaparecer {
             0% {
                 opacity: 0;
-                transform: translateY(20px) scale(0.9);
+                transform: translateY(10px) scale(0.9);
             }
-            10% {
+            15% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
-            90% {
+            85% {
                 opacity: 1;
-                transform: translateY(-150px) scale(1);
+                transform: translateY(-250px) scale(1);
             }
             100% {
                 opacity: 0;
-                transform: translateY(-180px) scale(0.8);
+                transform: translateY(-320px) scale(0.8);
             }
         }
 
@@ -439,7 +439,7 @@
             });
         }
 
-        // Função auxiliar que cria a caixinha flutuante com margem segura nas laterais
+        // Função auxiliar que cria a caixinha flutuante com margem segura nas laterais (Otimizada para 4 segundos)
         function criarFraseNaTela(texto) {
             const container = document.getElementById('container-frases');
             if (!container) return;
@@ -455,15 +455,15 @@
             
             container.appendChild(p);
 
-            // Dispara o estouro de corações um pouco antes do balão sumir (aos 7.5 segundos)
+            // Dispara o estouro de corações aos 3.5 segundos (quase a sumir)
             setTimeout(() => {
                 lancarCoracoesEstouro(p);
-            }, 7500);
+            }, 3500);
 
-            // Remove o elemento após a animação terminar
+            // Remove o elemento após 4 segundos para manter o ecrã limpo
             setTimeout(() => {
                 p.remove();
-            }, 8000);
+            }, 4000);
         }
 
         // Função que gera mini-corações ao estourar o balão
