@@ -160,6 +160,7 @@
             border-radius: 20px;
             margin-bottom: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            transition: opacity 0.5s ease-in-out;
         }
 
         .modal-content h2 {
@@ -242,26 +243,31 @@
 
         <!-- Botão de Música no Início -->
         <div>
-            <button class="btn-musica-inicio" onclick="tocarMusica()">🎵 Tocar música de fundo</button>
+            <button class="btn-musica-inicio" onclick="tocarMusica(this)">🎵 Tocar música de fundo</button>
         </div>
     </div>
 
     <!-- Pop-up Modal -->
     <div id="meuModal" class="modal-overlay">
         <div id="modalCorpo" class="modal-content">
-            <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
+            <img id="imagemSlide" src="foto1.png" alt="Foto especial">
             <h2>Vai estar livre no fim de semana? 😊</h2>
             <button class="btn-confirmar" onclick="finalizar()">Sim! ❤️</button>
         </div>
     </div>
 
-    <!-- Elemento de Áudio -->
+    <!-- Elemento de Áudio Oculto -->
     <audio id="background-music" preload="auto" loop>
         <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
         
     <script>
+        // Array de fotos da pasta principal
+        const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
+        let indiceFoto = 0;
+        let intervaloSlides = null;
+
         function fuger(btn) {
             btn.style.position = 'fixed';
             
@@ -278,16 +284,25 @@
 
         function abrirModal() {
             document.getElementById('meuModal').style.display = 'flex';
+            
+            // Inicia a rotação automática das fotos no modal a cada 3 segundos
+            intervaloSlides = setInterval(() => {
+                indiceFoto = (indiceFoto + 1) % fotos.length;
+                const imgElement = document.getElementById('imagemSlide');
+                if(imgElement) {
+                    imgElement.src = fotos[indiceFoto];
+                }
+            }, 3000);
         }
 
-        function tocarMusica() {
+        function tocarMusica(btn) {
             const music = document.getElementById('background-music');
             music.load();
             
-            // Dá um pequeno espaço de tempo para o áudio se preparar antes de dar o play
             setTimeout(() => {
                 music.play().then(() => {
-                    event.target.innerText = "🎶 A tocar...";
+                    btn.innerText = "🎶 A tocar...";
+                    btn.style.background = "rgba(46, 204, 113, 0.6)";
                 }).catch(error => {
                     console.log("Erro ao reproduzir áudio:", error);
                     alert("Clica novamente no botão para iniciar a música!");
@@ -296,6 +311,9 @@
         }
 
         function finalizar() {
+            // Para a rotação das fotos quando clica em confirmar
+            if (intervaloSlides) clearInterval(intervaloSlides);
+
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
                 <div class="icone-sucesso">🥳💖</div>
