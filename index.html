@@ -327,8 +327,8 @@
         </div>
     </div>
 
-    <!-- Elemento de Áudio -->
-    <audio id="background-music" loop>
+    <!-- Elemento de Áudio com tratamento de erro visível -->
+    <audio id="background-music" preload="auto" loop>
         <source src="mercy.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
@@ -384,46 +384,44 @@
             }, 3200);
         }
 
-        // Toca a música e inicia as frases de fundo com segurança
-        function ativarMusicaELegendas() {
+        // Função robusta para tocar a música garantindo o clique do usuário
+        function tocarMusicaAudio() {
             const music = document.getElementById('background-music');
             
-            music.play().then(() => {
-                iniciarFrasesFlutuantes();
-            }).catch(error => {
-                console.log("Tentando forçar play no áudio:", error);
-                music.load();
-                music.play().then(() => {
+            if (!music) return;
+
+            // Força o reset e o play
+            music.currentTime = 0;
+            let playPromise = music.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log("Música tocando com sucesso!");
                     iniciarFrasesFlutuantes();
-                }).catch(err => {
-                    console.log("Áudio bloqueado ou ficheiro não encontrado:", err);
+                }).catch(error => {
+                    console.log("Erro ao reproduzir áudio:", error);
+                    // Tenta mais uma vez recarregando
+                    music.load();
+                    music.play().then(() => {
+                        iniciarFrasesFlutuantes();
+                    }).catch(err => {
+                        alert("O navegador bloqueou o áudio ou o arquivo 'mercy.mp3' não está na mesma pasta!");
+                    });
                 });
-            });
+            }
         }
 
         // Ação conjunta ao clicar no botão "Sim!" principal
         function clicarSimPrincipal() {
-            ativarMusicaELegendas();
+            tocarMusicaAudio();
             abrirModalDuvida();
         }
 
-        // Botão manual caso ela queira clicar antes de responder
+        // Botão manual de música caso queiram testar antes
         function tocarMusica(btnElement) {
-            const music = document.getElementById('background-music');
-            
-            music.play().then(() => {
-                btnElement.innerText = "🎶 Música a tocar...";
-                btnElement.style.background = "rgba(46, 204, 113, 0.6)";
-                iniciarFrasesFlutuantes();
-            }).catch(error => {
-                music.load();
-                music.play().then(() => {
-                    btnElement.innerText = "🎶 Música a tocar...";
-                    iniciarFrasesFlutuantes();
-                }).catch(err => {
-                    alert("Certifique-se de que o ficheiro 'mercy.mp3' está na mesma pasta do site!");
-                });
-            });
+            tocarMusicaAudio();
+            btnElement.innerText = "🎶 Música a tocar...";
+            btnElement.style.background = "rgba(46, 204, 113, 0.6)";
         }
 
         // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida
@@ -509,5 +507,4 @@
             `;
         }
     </script>
-</body>
-</html>
+   
