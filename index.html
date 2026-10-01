@@ -3,496 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Um convite especial</title>
+    <title>O Eclipse 🌙✨</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a1c4fd 100%);
-            text-align: center;
-            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
             position: relative;
+            color: #333;
         }
 
-        /* --- ELEMENTOS FLUTUANTES NO FUNDO (Corações) --- */
-        .heart-bg {
-            position: absolute;
-            font-size: 1.6rem;
-            user-select: none;
-            pointer-events: none;
-            animation: flutuar 7s linear infinite;
-            bottom: -50px;
-            opacity: 0.7;
-            z-index: 1;
-        }
-
-        /* --- FRASES FLUTUANTES DA TRADUÇÃO (Nas Laterais) --- */
-        #container-frases {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
-        }
-
-        .frase-flutuante {
-            position: absolute;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.95);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 6px 12px;
+        /* Container principal estilo card translúcido padronizado */
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            backdrop-filter: blur(4px);
-            user-select: none;
-            pointer-events: none;
-            animation: flutuarFrase 9s linear forwards;
-            bottom: -50px;
-            opacity: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-            max-width: 220px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
             text-align: center;
-        }
-
-        @keyframes flutuar {
-            0% {
-                transform: translateY(0) rotate(0deg) scale(0.8);
-                opacity: 0;
-            }
-            20% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-110vh) rotate(360deg) scale(1.3);
-                opacity: 0;
-            }
-        }
-
-        @keyframes flutuarFrase {
-            0% {
-                transform: translateY(0) scale(0.9);
-                opacity: 0;
-            }
-            15% {
-                opacity: 0.95;
-            }
-            85% {
-                opacity: 0.95;
-            }
-            100% {
-                transform: translateY(-105vh) scale(1);
-                opacity: 0;
-            }
-        }
-
-        /* --- CONTEÚDO PRINCIPAL --- */
-        .container {
-            background: transparent;
-            padding: 20px;
-            max-width: 420px;
-            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
             z-index: 10;
         }
 
-        h1 {
-            color: #ffffff;
-            font-size: 1.7rem;
-            margin-bottom: 30px;
-            font-weight: 800;
-            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
-            line-height: 1.4;
-        }
-
-        .botoes {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            min-height: 50px;
+        .card img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
             margin-bottom: 20px;
         }
 
-        button {
-            padding: 14px 32px;
+        h1, p {
             font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
             font-weight: bold;
             border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-            transition: transform 0.1s ease, background 0.3s ease;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        #btn-sim {
-            background: linear-gradient(135deg, #11998e, #38ef7d);
-            color: white;
-        }
-
-        #btn-nao {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            color: white;
-            transition: left 0.2s ease, top 0.2s ease;
-            z-index: 99;
-        }
-
-        /* --- POP-UP MODAL --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(6px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 15px;
-        }
-
-        .modal-content {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 25px 20px;
             border-radius: 25px;
-            max-width: 380px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            text-align: center;
-            animation: popIn 0.3s ease;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .modal-content img {
-            width: 100%;
-            max-width: 220px;
-            height: auto;
-            border-radius: 18px;
-            margin-bottom: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            object-fit: cover;
+        .btn-yes {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #fff;
         }
 
-        .modal-content h2 {
-            font-size: 1.25rem;
-            color: #ffffff;
-            margin-bottom: 15px;
-            line-height: 1.4;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        .btn-no {
+            background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            color: #fff;
         }
 
-        .frase-declaracao {
-            font-size: 0.95rem;
-            color: #ffffff;
-            margin-bottom: 20px;
-            font-weight: 600;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            line-height: 1.5;
-            background: rgba(0, 0, 0, 0.15);
-            padding: 12px;
+        /* Balões flutuantes de fundo opcionais */
+        .floating-balloon {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px 15px;
             border-radius: 15px;
-        }
-
-        .botoes-duvida {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .btn-duvida-sim {
-            background: linear-gradient(135deg, #11998e, #38ef7d);
-            color: white;
-            padding: 10px 20px;
-            font-size: 1rem;
-            flex: 1;
-        }
-
-        .btn-confirmar {
-            background: linear-gradient(135deg, #ff758c, #ff7eb3);
-            color: white;
-            width: 100%;
-        }
-
-        .btn-prosseguir {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn-mais {
-            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-            color: #2c3e50;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .caixa-mensagem {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 22px;
-            color: #2c3e50;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            font-weight: 600;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            animation: popIn 0.4s ease;
-            text-align: center;
-        }
-
-        .texto-curiosidade {
-            font-size: 1.05rem;
-            margin-bottom: 15px;
-            color: #d63031;
-            font-weight: 800;
-        }
-
-        .easter-egg-18 {
-            margin-top: 15px;
             font-size: 0.85rem;
-            color: #2d3436;
-            opacity: 0.9;
-            border-top: 1px dashed rgba(0, 0, 0, 0.15);
-            padding-top: 12px;
-        }
-
-        .icone-sucesso {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            max-width: 180px;
+            z-index: 1;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Corações Flutuantes -->
-    <div class="heart-bg" style="left: 10%; animation-duration: 6s; animation-delay: 0s;">💖</div>
-    <div class="heart-bg" style="left: 25%; animation-duration: 8s; animation-delay: 2s;">✨</div>
-    <div class="heart-bg" style="left: 40%; animation-duration: 5s; animation-delay: 1s;">🌸</div>
-    <div class="heart-bg" style="left: 60%; animation-duration: 7s; animation-delay: 3s;">💕</div>
-    <div class="heart-bg" style="left: 75%; animation-duration: 9s; animation-delay: 0.5s;">💗</div>
-    <div class="heart-bg" style="left: 90%; animation-duration: 6s; animation-delay: 2.5s;">✨</div>
-
-    <!-- Container para as Frases Flutuantes da Tradução (Nas Laterais) -->
-    <div id="container-frases"></div>
-
-    <!-- Conteúdo Principal -->
-    <div class="container">
-        <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
-
-        <div class="botoes">
-            <button id="btn-sim" onclick="clicarSimPrincipal()">Sim!</button>
-            <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
+    <!-- Exemplo da primeira tela já com o card padronizado -->
+    <div class="card" id="step-1">
+        <p>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</p>
+        <div class="buttons-container">
+            <button class="btn btn-yes" onclick="nextStep(2)">Sim! 💕</button>
+            <button class="btn btn-no" id="btn-no" onmouseover="moveButton()">Não</button>
         </div>
     </div>
 
-    <!-- Pop-up Modal -->
-    <div id="meuModal" class="modal-overlay">
-        <div id="modalCorpo" class="modal-content"></div>
-    </div>
-
-    <!-- Elemento de Áudio Oculto -->
-    <audio id="background-music" preload="auto" loop>
-        <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
-    </audio>
-      
     <script>
-        const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
-        let indiceFoto = 0;
-        let intervaloSlides;
-        let geradorFrasesID = null;
-
-        // Trechos REAIS da tradução da música "Mercy" do Shawn Mendes
-        const trechosMusica = [
-            "Você me tem em suas mãos...",
-            "Nem sabe o tamanho do seu poder...",
-            "Amor, por favor, tenha piedade de mim...",
-            "Pegue leve com meu coração...",
-            "Você continua acabando comigo...",
-            "Tenha piedade, piedade do meu coração...",
-            "Eu dirigiria a noite só para ficar perto de você...",
-            "Estou te implorando por piedade..."
-        ];
-
-        // Função do botão "Não" fugir
-        function fuger(btn) {
-            btn.style.position = 'fixed';
-            const margem = 30;
-            const larguraMax = window.innerWidth - btn.offsetWidth - margem;
-            const alturaMax = window.innerHeight - btn.offsetHeight - margem;
-
-            const novaX = Math.max(margem, Math.floor(Math.random() * larguraMax));
-            const novaY = Math.max(margem, Math.floor(Math.random() * alturaMax));
-
-            btn.style.left = novaX + 'px';
-            btn.style.top = novaY + 'px';
+        function nextStep(step) {
+            // Lógica para avançar os passos do seu site
+            console.log("Indo para o passo: " + step);
         }
 
-        // Sistema para soltar frases flutuantes sincronizadas nas laterais
-        function iniciarFrasesFlutuantes() {
-            if (geradorFrasesID) return;
-            
-            geradorFrasesID = setInterval(() => {
-                const container = document.getElementById('container-frases');
-                if (!container) return;
-
-                const p = document.createElement('div');
-                p.className = 'frase-flutuante';
-                p.innerText = trechosMusica[Math.floor(Math.random() * trechosMusica.length)];
-                
-                // Distribui nas laterais: 5% a 25% (esquerda) OU 70% a 90% (direita)
-                const ladoEsquerdo = Math.random() < 0.5;
-                const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 20) + 5 : Math.floor(Math.random() * 20) + 70;
-                p.style.left = posicaoX + '%';
-                
-                container.appendChild(p);
-
-                setTimeout(() => {
-                    p.remove();
-                }, 9000);
-            }, 3000);
-        }
-
-        // Função para disparar o áudio ao clicar em "Sim!"
-        async function tocarMusicaAudio() {
-            const music = document.getElementById('background-music');
-            if (!music) return;
-
-            try {
-                music.currentTime = 0;
-                let playPromise = music.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(_ => {
-                        console.log("Música tocada com sucesso!");
-                        iniciarFrasesFlutuantes();
-                    }).catch(error => {
-                        console.log("Tentativa de play bloqueada, tentando forçar...", error);
-                        music.muted = false;
-                        music.play();
-                        iniciarFrasesFlutuantes();
-                    });
-                }
-            } catch (error) {
-                console.log("Erro geral no áudio:", error);
-            }
-        }
-
-        // Ação principal ao clicar em "Sim!"
-        function clicarSimPrincipal() {
-            tocarMusicaAudio();
-            abrirModalDuvida();
-        }
-
-        // Passo 1: Abre a etapa de dúvida
-        function abrirModalDuvida() {
-            const modal = document.getElementById('meuModal');
-            const modalCorpo = document.getElementById('modalCorpo');
-            
-            modal.style.display = 'flex';
-            clearInterval(intervaloSlides);
-
-            modalCorpo.innerHTML = `
-                <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" alt="Dúvida pensativa">
-                <h2>Você vai aceitar mesmo?</h2>
-                <div class="botoes-duvida">
-                    <button class="btn-duvida-sim" onclick="abrirSlideshowFotos()">Com certeza!</button>
-                </div>
-            `;
-        }
-
-        // Passo 2: Abre o carrossel de fotos com a declaração
-        function abrirSlideshowFotos() {
-            const modalCorpo = document.getElementById('modalCorpo');
-            
-            modalCorpo.innerHTML = `
-                <img id="foto-slide" src="foto1.png" alt="Emilly Cássia">
-                <p class="frase-declaracao">Eu já via sua beleza antes mesmo de ter os óculos, você é diferente como se fosse de outro mundo, e eu não só vejo a sua beleza mas também quem você é, seu jeito de falar, seu jeito de pensar, sua mensagem me faz feliz, escutar sua voz também me faz feliz!</p>
-                <button class="btn-prosseguir" onclick="proximaEtapa()">Prosseguir ❤️</button>
-            `;
-            
-            indiceFoto = 0;
-            const imgElement = document.getElementById('foto-slide');
-            
-            clearInterval(intervaloSlides);
-            intervaloSlides = setInterval(() => {
-                indiceFoto = (indiceFoto + 1) % fotos.length;
-                if(imgElement) imgElement.src = fotos[indiceFoto];
-            }, 3000);
-        }
-
-        // Passo 3: Pergunta do final de semana
-        function proximaEtapa() {
-            clearInterval(intervaloSlides);
-            const modalCorpo = document.getElementById('modalCorpo');
-            modalCorpo.innerHTML = `
-                <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
-                <h2>Você vai estar livre no final de semana?</h2>
-                <button class="btn-confirmar" onclick="finalizar()">Sim!</button>
-            `;
-        }
-
-        // Passo 4: Mensagem final de sucesso
-        function finalizar() {
-            const modalCorpo = document.getElementById('modalCorpo');
-            modalCorpo.innerHTML = `
-                <div class="icone-sucesso">🥳💖</div>
-                <h2>Ebaaa! 🎉<br><br>Depois você me diz qual horário fica melhor para você! 😊</h2>
-                
-                <button id="btnMais" class="btn-mais" onclick="revelarSegredo()">Mais? 👀</button>
-                <div id="secaoSegredo"></div>
-            `;
-        }
-
-        // Passo 5: Easter egg e segredo final
-        function revelarSegredo() {
-            document.getElementById('btnMais').style.display = 'none';
-
-            const secao = document.getElementById('secaoSegredo');
-            secao.innerHTML = `
-                <div class="caixa-mensagem">
-                    <p class="texto-curiosidade">
-                        Eimy curiosa, você sabia que a curiosidade matou o gato, né? Mas no seu caso é uma gatinha! 😼
-                    </p>
-                    
-                    ☀️🌙 <b>Um detalhe especial:</b><br>
-                    Lembra quando a gente só conversava pelo chat do jogo no Mobile Legends e eu disse que a gente parecia o sol e a lua? Então... acho que finalmente chegou a hora de acontecer o nosso eclipse! 🙈✨
-                    <br><br>
-                    Eii, não importa o quão difícil esteja sendo para você, Eimy: pra qualquer coisa, pode contar comigo sempre, tá? ❤️
-                    
-                    <div class="easter-egg-18">
-                        🎁 <i>E como é meu aniversário de 18 anos, ter você aceitando esse convite já valeu como o melhor presente! 😂🎂</i>
-                    </div>
-                </div>
-            `;
+        function moveButton() {
+            const btnNo = document.getElementById('btn-no');
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            btnNo.style.position = 'absolute';
+            btnNo.style.left = `${x}px`;
+            btnNo.style.top = `${y}px`;
         }
     </script>
 </body>
