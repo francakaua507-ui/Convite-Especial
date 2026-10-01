@@ -98,7 +98,7 @@
 
         h1 {
             color: #ffffff;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             margin-bottom: 30px;
             font-weight: 800;
             text-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
@@ -139,6 +139,17 @@
             color: white;
             transition: left 0.2s ease, top 0.2s ease;
             z-index: 99;
+        }
+
+        .btn-musica-inicio {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         /* --- POP-UP MODAL --- */
@@ -295,12 +306,17 @@
 
     <!-- Conteúdo Principal -->
     <div class="container">
-        <h1>Você vai estar livre no sábado?</h1>
+        <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
 
         <div class="botoes">
-            <!-- Ao clicar em Sim!, a música toca e as frases iniciam por causa da interação do usuário -->
-            <button id="btn-sim" onclick="tocarMusicaEAbrirModal()">Sim!</button>
+            <!-- Ao clicar em Sim!, disparamos a música e as frases ao mesmo tempo que abrimos o modal -->
+            <button id="btn-sim" onclick="clicarSimPrincipal()">Sim!</button>
             <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
+        </div>
+
+        <!-- Botão de Música opcional de reforço -->
+        <div>
+            <button class="btn-musica-inicio" onclick="tocarMusica(this)">🎵 Tocar música de fundo</button>
         </div>
     </div>
 
@@ -347,17 +363,19 @@
             btn.style.top = novaY + 'px';
         }
 
+        // Sistema para soltar frases flutuantes sincronizadas
         function iniciarFrasesFlutuantes() {
             if (geradorFrasesID) return;
             
             geradorFrasesID = setInterval(() => {
                 const container = document.getElementById('container-frases');
                 if (!container) return;
-                
+
                 const p = document.createElement('div');
                 p.className = 'frase-flutuante';
                 p.innerText = trechosMusica[Math.floor(Math.random() * trechosMusica.length)];
                 p.style.left = Math.floor(Math.random() * 75) + 10 + '%';
+                
                 container.appendChild(p);
 
                 setTimeout(() => {
@@ -366,14 +384,14 @@
             }, 3200);
         }
 
-        // Toca a música e já abre o fluxo do modal garantindo permissão do navegador
-        function tocarMusicaEAbrirModal() {
+        // Toca a música e inicia as frases de fundo com segurança
+        function ativarMusicaELegendas() {
             const music = document.getElementById('background-music');
             
             music.play().then(() => {
                 iniciarFrasesFlutuantes();
             }).catch(error => {
-                console.log("Tentando recarregar áudio...", error);
+                console.log("Tentando forçar play no áudio:", error);
                 music.load();
                 music.play().then(() => {
                     iniciarFrasesFlutuantes();
@@ -381,10 +399,34 @@
                     console.log("Áudio bloqueado ou ficheiro não encontrado:", err);
                 });
             });
+        }
 
+        // Ação conjunta ao clicar no botão "Sim!" principal
+        function clicarSimPrincipal() {
+            ativarMusicaELegendas();
             abrirModalDuvida();
         }
 
+        // Botão manual caso ela queira clicar antes de responder
+        function tocarMusica(btnElement) {
+            const music = document.getElementById('background-music');
+            
+            music.play().then(() => {
+                btnElement.innerText = "🎶 Música a tocar...";
+                btnElement.style.background = "rgba(46, 204, 113, 0.6)";
+                iniciarFrasesFlutuantes();
+            }).catch(error => {
+                music.load();
+                music.play().then(() => {
+                    btnElement.innerText = "🎶 Música a tocar...";
+                    iniciarFrasesFlutuantes();
+                }).catch(err => {
+                    alert("Certifique-se de que o ficheiro 'mercy.mp3' está na mesma pasta do site!");
+                });
+            });
+        }
+
+        // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida
         function abrirModalDuvida() {
             const modal = document.getElementById('meuModal');
             const modalCorpo = document.getElementById('modalCorpo');
@@ -401,6 +443,7 @@
             `;
         }
 
+        // Passo 2: Após confirmar, abre o carrossel de fotos com a declaração
         function abrirSlideshowFotos() {
             const modalCorpo = document.getElementById('modalCorpo');
             
@@ -420,16 +463,18 @@
             }, 3000);
         }
 
+        // Passo 3: Pergunta do final de semana
         function proximaEtapa() {
             clearInterval(intervaloSlides);
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
                 <img src="https://media.giphy.com/media/qUIm5wu6LAAog/giphy.gif" alt="Gato de Botas fofo">
-                <h2>Você vai estar livre no sábado?</h2>
+                <h2>Você vai estar livre no final de semana?</h2>
                 <button class="btn-confirmar" onclick="finalizar()">Sim!</button>
             `;
         }
 
+        // Passo 4: Mensagem final de sucesso
         function finalizar() {
             const modalCorpo = document.getElementById('modalCorpo');
             modalCorpo.innerHTML = `
@@ -441,6 +486,7 @@
             `;
         }
 
+        // Passo 5: Easter egg e segredo final
         function revelarSegredo() {
             document.getElementById('btnMais').style.display = 'none';
 
