@@ -309,12 +309,10 @@
         <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
 
         <div class="botoes">
-            <!-- Ao clicar em Sim!, disparamos a música e as frases ao mesmo tempo que abrimos o modal -->
             <button id="btn-sim" onclick="clicarSimPrincipal()">Sim!</button>
             <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
         </div>
 
-        <!-- Botão de Música opcional de reforço -->
         <div>
             <button class="btn-musica-inicio" onclick="tocarMusica(this)">🎵 Tocar música de fundo</button>
         </div>
@@ -322,12 +320,10 @@
 
     <!-- Pop-up Modal -->
     <div id="meuModal" class="modal-overlay">
-        <div id="modalCorpo" class="modal-content">
-            <!-- Conteúdo dinâmico inserido via script -->
-        </div>
+        <div id="modalCorpo" class="modal-content"></div>
     </div>
 
-    <!-- Elemento de Áudio com tratamento de erro visível -->
+    <!-- Elemento de Áudio -->
     <audio id="background-music" preload="auto" loop>
         <source src="mercy.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
@@ -350,6 +346,7 @@
             "O nosso eclipse..."
         ];
 
+        // Função do botão "Não" fugir
         function fuger(btn) {
             btn.style.position = 'fixed';
             const margem = 30;
@@ -384,7 +381,7 @@
             }, 3200);
         }
 
-        // Função segura com tratamento de erro blindado contra o "unhandledrejection"
+        // Função segura para tocar a música
         async function tocarMusicaAudio() {
             const music = document.getElementById('background-music');
             if (!music) return;
@@ -396,11 +393,10 @@
                 iniciarFrasesFlutuantes();
             } catch (error) {
                 console.log("Áudio impedido pelo navegador ou arquivo ausente:", error);
-                // O código continua rodando sem quebrar a aplicação por causa do try/catch!
             }
         }
 
-        // Ação conjunta ao clicar no botão "Sim!" principal
+        // Ação principal ao clicar em "Sim!"
         function clicarSimPrincipal() {
             tocarMusicaAudio();
             abrirModalDuvida();
@@ -413,7 +409,7 @@
             btnElement.style.background = "rgba(46, 204, 113, 0.6)";
         }
 
-        // Passo 1: Ao clicar em Sim!, abre a etapa de dúvida
+        // Passo 1: Abre a etapa de dúvida
         function abrirModalDuvida() {
             const modal = document.getElementById('meuModal');
             const modalCorpo = document.getElementById('modalCorpo');
@@ -430,7 +426,7 @@
             `;
         }
 
-        // Passo 2: Após confirmar, abre o carrossel de fotos com a declaração
+        // Passo 2: Abre o carrossel de fotos com a declaração
         function abrirSlideshowFotos() {
             const modalCorpo = document.getElementById('modalCorpo');
             
@@ -495,4 +491,6 @@
                 </div>
             `;
         }
-   
+    </script>
+</body>
+</html>
