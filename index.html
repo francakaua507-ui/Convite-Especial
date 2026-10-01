@@ -289,7 +289,64 @@
             margin-bottom: 10px;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
-    </style>
+        
+/* Garante que os balões ficam numa área segura longe das bordas extremas */
+.frase-flutuante {
+    position: fixed;
+    bottom: 10%; /* Começam mais em cima/baixo de forma controlada */
+    max-width: 250px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.95rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: subirEdesaparecer 8s ease-out forwards;
+    z-index: 999;
+}
+
+@keyframes subirEdesaparecer {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    90% {
+        opacity: 1;
+        transform: translateY(-150px) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-180px) scale(0.8);
+    }
+}
+
+/* Estilo dos coraçãozinhos que sobem ao estourar */
+.coracao-estouro {
+    position: fixed;
+    font-size: 1.2rem;
+    animation: explodirCoracao 1s ease-out forwards;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+@keyframes explodirCoracao {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--dirX), var(--dirY)) scale(1.4);
+    }
+}
 </head>
 <body>
 
@@ -417,7 +474,7 @@
             });
         }
 
-        // Função auxiliar que cria a caixinha flutuante na lateral
+        // Função auxiliar que cria a caixinha flutuante nas laterais com margem segura
         function criarFraseNaTela(texto) {
             const container = document.getElementById('container-frases');
             if (!container) return;
@@ -426,12 +483,17 @@
             p.className = 'frase-flutuante';
             p.innerText = texto;
             
-            // Distribui nas laterais: esquerda ou direita
+            // Garante que o balão nasce entre 15% e 70% da tela, evitando os cantos extremos
             const ladoEsquerdo = Math.random() < 0.5;
-            const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 16) + 2 : Math.floor(Math.random() * 16) + 72;
+            const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 20) + 5 : Math.floor(Math.random() * 20) + 65;
             p.style.left = posicaoX + '%';
             
             container.appendChild(p);
+
+            // Quando o balão estiver quase a sumir (aos 7.5 segundos), dispara os corações na posição dele
+            setTimeout(() => {
+                lancarCoracoesEstouro(p);
+            }, 7500);
 
             // Remove o elemento após a animação terminar
             setTimeout(() => {
@@ -439,31 +501,35 @@
             }, 8000);
         }
 
-        // Função para disparar o áudio ao clicar em "Sim!"
-        async function tocarMusicaAudio() {
-            const music = document.getElementById('background-music');
-            if (!music) return;
+        // Função que gera os mini-corações ao "estourar" o balão
+        function lancarCoracoesEstouro(elementoBalao) {
+            const rect = elementoBalao.getBoundingClientRect();
+            const centroX = rect.left + rect.width / 2;
+            const centroY = rect.top;
 
-            try {
-                music.currentTime = 0;
-                let playPromise = music.play();
+            // Cria de 4 a 6 corações por balão
+            for (let i = 0; i < 5; i++) {
+                const coracao = document.createElement('div');
+                coracao.className = 'coracao-estouro';
+                coracao.innerHTML = '💖';
                 
-                if (playPromise !== undefined) {
-                    playPromise.then(_ => {
-                        console.log("Música tocada com sucesso!");
-                        iniciarFrasesSincronizadas();
-                    }).catch(error => {
-                        console.log("Tentativa de play bloqueada, tentando forçar...", error);
-                        music.muted = false;
-                        music.play();
-                        iniciarFrasesSincronizadas();
-                    });
-                }
-            } catch (error) {
-                console.log("Erro geral no áudio:", error);
+                coracao.style.left = centroX + 'px';
+                coracao.style.top = centroY + 'px';
+
+                // Direções aleatórias para os lados e para cima
+                const dirX = (Math.random() - 0.5) * 100 + 'px';
+                const dirY = (Math.random() - 1) * 80 - 20 + 'px';
+                coracao.style.setProperty('--dirX', dirX);
+                coracao.style.setProperty('--dirY', dirY);
+
+                document.body.appendChild(coracao);
+
+                // Remove o coraçãozinho após a animação de 1 segundo
+                setTimeout(() => {
+                    coracao.remove();
+                }, 1000);
             }
         }
-
         // Ação principal ao clicar em "Sim!"
         function clicarSimPrincipal() {
             tocarMusicaAudio();
