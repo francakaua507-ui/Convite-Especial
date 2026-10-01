@@ -384,30 +384,19 @@
             }, 3200);
         }
 
-        // Função robusta para tocar a música garantindo o clique do usuário
-        function tocarMusicaAudio() {
+        // Função segura com tratamento de erro blindado contra o "unhandledrejection"
+        async function tocarMusicaAudio() {
             const music = document.getElementById('background-music');
-            
             if (!music) return;
 
-            // Força o reset e o play
-            music.currentTime = 0;
-            let playPromise = music.play();
-
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log("Música tocando com sucesso!");
-                    iniciarFrasesFlutuantes();
-                }).catch(error => {
-                    console.log("Erro ao reproduzir áudio:", error);
-                    // Tenta mais uma vez recarregando
-                    music.load();
-                    music.play().then(() => {
-                        iniciarFrasesFlutuantes();
-                    }).catch(err => {
-                        alert("O navegador bloqueou o áudio ou o arquivo 'mercy.mp3' não está na mesma pasta!");
-                    });
-                });
+            try {
+                music.currentTime = 0;
+                await music.play();
+                console.log("Música tocando com sucesso!");
+                iniciarFrasesFlutuantes();
+            } catch (error) {
+                console.log("Áudio impedido pelo navegador ou arquivo ausente:", error);
+                // O código continua rodando sem quebrar a aplicação por causa do try/catch!
             }
         }
 
@@ -417,7 +406,7 @@
             abrirModalDuvida();
         }
 
-        // Botão manual de música caso queiram testar antes
+        // Botão manual de música
         function tocarMusica(btnElement) {
             tocarMusicaAudio();
             btnElement.innerText = "🎶 Música a tocar...";
@@ -506,5 +495,4 @@
                 </div>
             `;
         }
-    </script>
    
