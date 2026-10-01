@@ -318,8 +318,7 @@
     <div id="meuModal" class="modal-overlay">
         <div id="modalCorpo" class="modal-content"></div>
     </div>
-
-    <!-- Elemento de Áudio Oculto -->
+<!-- Elemento de Áudio Oculto -->
     <audio id="background-music" preload="auto" loop>
         <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
     </audio>
@@ -328,18 +327,18 @@
         const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
         let indiceFoto = 0;
         let intervaloSlides;
-        let geradorFrasesID = null;
 
-        // Trechos REAIS da tradução da música "Mercy" do Shawn Mendes
-        const trechosMusica = [
-            "Você me tem em suas mãos...",
-            "Nem sabe o tamanho do seu poder...",
-            "Amor, por favor, tenha piedade de mim...",
-            "Pegue leve com meu coração...",
-            "Você continua acabando comigo...",
-            "Tenha piedade, piedade do meu coração...",
-            "Eu dirigiria a noite só para ficar perto de você...",
-            "Estou te implorando por piedade..."
+        // Lista com o tempo exato (em segundos) e a tradução correspondente da música
+        const legendasSincronizadas = [
+            { tempo: 0, texto: "🎵 (A música começa)..." },
+            { tempo: 5, texto: "Você me tem em suas mãos..." },
+            { tempo: 10, texto: "Nem sabe o tamanho do seu poder..." },
+            { tempo: 16, texto: "Amor, por favor, tenha piedade de mim..." },
+            { tempo: 22, texto: "Pegue leve com meu coração..." },
+            { tempo: 28, texto: "Você continua acabando comigo..." },
+            { tempo: 35, texto: "Tenha piedade, piedade do meu coração..." },
+            { tempo: 42, texto: "Eu dirigiria a noite só para ficar perto de você..." },
+            { tempo: 50, texto: "Estou te implorando por piedade..." }
         ];
 
         // Função do botão "Não" fugir
@@ -356,29 +355,47 @@
             btn.style.top = novaY + 'px';
         }
 
-        // Sistema para soltar frases flutuantes sincronizadas nas laterais
-        function iniciarFrasesFlutuantes() {
-            if (geradorFrasesID) return;
+        // Sistema para soltar frases flutuantes sincronizadas nas laterais com a música
+        function iniciarFrasesSincronizadas() {
+            const music = document.getElementById('background-music');
+            if (!music) return;
+
+            music.addEventListener('timeupdate', () => {
+                const tempoAtual = music.currentTime;
+
+                // Procura qual legenda corresponde ao segundo atual da música
+                let legendaAtual = legendasSincronizadas.reduce((prev, curr) => {
+                    return (tempoAtual >= curr.tempo) ? curr : prev;
+                }, legendasSincronizadas[0]);
+
+                // Só cria o elemento se houver uma legenda válida e para evitar duplicação em looping contínuo
+                if (legendaAtual && window.ultimaFraseExibida !== legendaAtual.texto) {
+                    window.ultimaFraseExibida = legendaAtual.texto;
+                    criarFraseNaTela(legendaAtual.texto);
+                }
+            });
+        }
+
+        // Função auxiliar que cria a caixinha flutuante na lateral
+        function criarFraseNaTela(texto) {
+            const container = document.getElementById('container-frases');
+            if (!container) return;
+
+            const p = document.createElement('div');
+            p.className = 'frase-flutuante';
+            p.innerText = texto;
             
-            geradorFrasesID = setInterval(() => {
-                const container = document.getElementById('container-frases');
-                if (!container) return;
+            // Distribui nas laterais: esquerda ou direita
+            const ladoEsquerdo = Math.random() < 0.5;
+            const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 16) + 2 : Math.floor(Math.random() * 16) + 72;
+            p.style.left = posicaoX + '%';
+            
+            container.appendChild(p);
 
-                const p = document.createElement('div');
-                p.className = 'frase-flutuante';
-                p.innerText = trechosMusica[Math.floor(Math.random() * trechosMusica.length)];
-                
-                // Distribui nas laterais: 5% a 25% (esquerda) OU 70% a 90% (direita)
-                const ladoEsquerdo = Math.random() < 0.5;
-                const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 20) + 5 : Math.floor(Math.random() * 20) + 70;
-                p.style.left = posicaoX + '%';
-                
-                container.appendChild(p);
-
-                setTimeout(() => {
-                    p.remove();
-                }, 9000);
-            }, 3000);
+            // Remove o elemento após a animação terminar
+            setTimeout(() => {
+                p.remove();
+            }, 8000);
         }
 
         // Função para disparar o áudio ao clicar em "Sim!"
@@ -393,12 +410,12 @@
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
                         console.log("Música tocada com sucesso!");
-                        iniciarFrasesFlutuantes();
+                        iniciarFrasesSincronizadas();
                     }).catch(error => {
                         console.log("Tentativa de play bloqueada, tentando forçar...", error);
                         music.muted = false;
                         music.play();
-                        iniciarFrasesFlutuantes();
+                        iniciarFrasesSincronizadas();
                     });
                 }
             } catch (error) {
@@ -480,7 +497,7 @@
             secao.innerHTML = `
                 <div class="caixa-mensagem">
                     <p class="texto-curiosidade">
-                        Eimy curiosa, você sabia que a curiosidade matou o gato, né? Mas no seu caso é uma gatinha! 😼
+                        Eimy curiosa, a curiosidade matou o gato, né? Mas no seu caso é uma gatinha! 😼
                     </p>
                     
                     ☀️🌙 <b>Um detalhe especial:</b><br>
@@ -495,5 +512,4 @@
             `;
         }
     </script>
-</body>
-</html>
+    
