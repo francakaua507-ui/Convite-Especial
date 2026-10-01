@@ -25,7 +25,7 @@
             position: relative;
         }
 
-        /* --- ELEMENTOS FLUTUANTES NO FUNDO (Corações e Frases) --- */
+        /* --- ELEMENTOS FLUTUANTES NO FUNDO (Corações) --- */
         .heart-bg {
             position: absolute;
             font-size: 1.6rem;
@@ -37,22 +37,33 @@
             z-index: 1;
         }
 
+        /* --- FRASES FLUTUANTES DA TRADUÇÃO (Nas Laterais, camada superior) --- */
+        #container-frases {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999; /* Fica acima de tudo, inclusive modais, sem borrar */
+            overflow: hidden;
+        }
+
         .frase-flutuante {
             position: absolute;
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.9);
-            background: rgba(0, 0, 0, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(0, 0, 0, 0.4);
             padding: 6px 12px;
             border-radius: 20px;
             backdrop-filter: blur(4px);
             user-select: none;
             pointer-events: none;
-            animation: flutuarFrase 9s linear infinite;
+            animation: flutuarFrase 9s linear forwards;
             bottom: -50px;
             opacity: 0;
-            z-index: 2;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            max-width: 250px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            max-width: 220px;
             text-align: center;
         }
 
@@ -76,10 +87,10 @@
                 opacity: 0;
             }
             15% {
-                opacity: 0.9;
+                opacity: 0.95;
             }
             85% {
-                opacity: 0.9;
+                opacity: 0.95;
             }
             100% {
                 transform: translateY(-105vh) scale(1);
@@ -290,20 +301,16 @@
     <div class="heart-bg" style="left: 75%; animation-duration: 9s; animation-delay: 0.5s;">💗</div>
     <div class="heart-bg" style="left: 90%; animation-duration: 6s; animation-delay: 2.5s;">✨</div>
 
-    <!-- Container para as Frases Flutuantes da Tradução -->
+    <!-- Container para as Frases Flutuantes da Tradução (Nas Laterais) -->
     <div id="container-frases"></div>
 
-    <!-- Conteúdo Principal -->
+    <!-- Conteúdo Principal (Sem o botão de música poluindo a tela) -->
     <div class="container">
         <h1>Emilly Cassia duvido você conseguir apertar o botão não! Mas se não estiver conseguindo, pode ir de sim! 😉</h1>
 
         <div class="botoes">
             <button id="btn-sim" onclick="clicarSimPrincipal()">Sim!</button>
             <button id="btn-nao" onmouseover="fuger(this)" onclick="fuger(this)">Não</button>
-        </div>
-
-        <div>
-            <button class="btn-musica-inicio" onclick="tocarMusica(this)">🎵 Tocar música de fundo</button>
         </div>
     </div>
 
@@ -312,27 +319,12 @@
         <div id="modalCorpo" class="modal-content"></div>
     </div>
 
-    <!-- Elemento de Áudio Oculto (Força o navegador a rodar sem poluir a tela) -->
+    <!-- Elemento de Áudio Oculto -->
     <audio id="background-music" preload="auto" loop>
-    <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
-</audio>
-   <!-- Container para as Frases Flutuantes da Tradução -->
-<div id="container-frases"></div>     
+        <source src="https://files.catbox.moe/zm3nl0.mp3" type="audio/mpeg">
+    </audio>
+      
     <script>
-        function tocarMusica(btn) {
-            const music = document.getElementById('background-music');
-            music.load();
-            
-            setTimeout(() => {
-                music.play().then(() => {
-                    btn.innerText = "🎶 A tocar...";
-                    btn.style.background = "rgba(46, 204, 113, 0.6)";
-                }).catch(error => {
-                    console.log("Erro ao reproduzir áudio:", error);
-                    alert("Clica novamente no botão para iniciar a música!");
-                });
-            }, 300);
-        }
         const fotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png"];
         let indiceFoto = 0;
         let intervaloSlides;
@@ -363,7 +355,7 @@
             btn.style.top = novaY + 'px';
         }
 
-        // Sistema para soltar frases flutuantes sincronizadas
+        // Sistema para soltar frases flutuantes sincronizadas exclusivamente nas laterais (evita o centro)
         function iniciarFrasesFlutuantes() {
             if (geradorFrasesID) return;
             
@@ -374,17 +366,21 @@
                 const p = document.createElement('div');
                 p.className = 'frase-flutuante';
                 p.innerText = trechosMusica[Math.floor(Math.random() * trechosMusica.length)];
-                p.style.left = Math.floor(Math.random() * 75) + 10 + '%';
+                
+                // Distribui nas laterais: 5% a 25% (esquerda) OU 70% a 90% (direita)
+                const ladoEsquerdo = Math.random() < 0.5;
+                const posicaoX = ladoEsquerdo ? Math.floor(Math.random() * 20) + 5 : Math.floor(Math.random() * 20) + 70;
+                p.style.left = posicaoX + '%';
                 
                 container.appendChild(p);
 
                 setTimeout(() => {
                     p.remove();
                 }, 9000);
-            }, 3200);
+            }, 3000);
         }
 
-        // Função ultrarrobusta para disparar o áudio
+        // Função ultrarrobusta para disparar o áudio automaticamente ao clicar em "Sim!"
         async function tocarMusicaAudio() {
             const music = document.getElementById('background-music');
             if (!music) return;
@@ -399,7 +395,6 @@
                         iniciarFrasesFlutuantes();
                     }).catch(error => {
                         console.log("Tentativa de play bloqueada, tentando forçar...", error);
-                        // Força o play novamente caso o navegador exija interação direta do toque
                         music.muted = false;
                         music.play();
                         iniciarFrasesFlutuantes();
@@ -410,17 +405,10 @@
             }
         }
 
-        // Ação principal ao clicar em "Sim!"
+        // Ação principal ao clicar em "Sim!" (Dispara a música e abre o modal)
         function clicarSimPrincipal() {
             tocarMusicaAudio();
             abrirModalDuvida();
-        }
-
-        // Botão manual de música
-        function tocarMusica(btnElement) {
-            tocarMusicaAudio();
-            btnElement.innerText = "🎶 Música a tocar...";
-            btnElement.style.background = "rgba(46, 204, 113, 0.6)";
         }
 
         // Passo 1: Abre a etapa de dúvida
